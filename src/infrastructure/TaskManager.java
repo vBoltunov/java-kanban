@@ -21,4 +21,16 @@ public class TaskManager {
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
     }
+
+    private int generateTaskId() {
+        return ++taskId;
+    }
+
+    private int generateEpicId() {
+        return ++epicId;
+    }
+
+    private int generateSubtaskId() {
+        return ++subtaskId;
+    }
 }
