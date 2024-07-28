@@ -136,11 +136,11 @@ public class TaskManager {
     // Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
     public void updateTask(Task task) {
         if (task == null) {
-            System.out.println("The incoming task is null");
+            System.out.println("Передана пустая задача");
             return;
         }
         if (!tasks.containsKey(task.getId())) {
-            System.out.println("The task has incorrect number");
+            System.out.println("Некорректный номер задачи");
             return;
         }
         if (task.getStatus() == null) {
@@ -151,11 +151,11 @@ public class TaskManager {
 
     public void updateEpic(Epic epic) {
         if (epic == null) {
-            System.out.println("The incoming epic is null");
+            System.out.println("Передан пустой эпик");
             return;
         }
         if (!epics.containsKey(epic.getId())) {
-            System.out.println("The epic has incorrect number");
+            System.out.println("Некорректный номер эпика");
             return;
         }
         Epic saved = epics.get(epic.getId());
@@ -165,16 +165,16 @@ public class TaskManager {
 
     public void updateSubtask(Subtask subtask) {
         if (subtask == null) {
-            System.out.println("The incoming subtask is null");
+            System.out.println("Передана пустая подзадача");
             return;
         }
         if (!subtasks.containsKey(subtask.getId())) {
-            System.out.println("The subtask has incorrect number");
+            System.out.println("Некорректный номер подзадачи");
             return;
         }
         int epicId = subtask.getEpicId();
         if (!epics.containsKey(epicId)) {
-            System.out.println("The epic for subtask has incorrect number");
+            System.out.println("Подзадача имеет некорректный номер эпика");
             return;
         }
         List<Integer> epicSubtaskList = epics.get(epicId).getSubtasks();
