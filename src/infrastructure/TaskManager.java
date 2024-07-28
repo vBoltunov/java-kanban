@@ -80,6 +80,19 @@ public class TaskManager {
         }
     }
 
+    // Получение по идентификатору
+    public Task getTaskById(int id) {
+        return tasks.get(id);
+    }
+
+    public Epic getEpicById(int id) {
+        return epics.get(id);
+    }
+
+    public Subtask getSubtaskById(int id) {
+        return subtasks.get(id);
+    }
+
     // пересчёт статуса эпика
     public Status calculateStatus(Epic epic) {
         List<Integer> subtaskList = epic.getSubtasks();
