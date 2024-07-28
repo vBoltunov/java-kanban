@@ -1,5 +1,7 @@
 package model;
 
+import model.enums.Status;
+
 public class Subtask extends Task {
     private final int epicId;
 
