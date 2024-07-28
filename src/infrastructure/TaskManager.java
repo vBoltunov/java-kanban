@@ -1,6 +1,7 @@
 package infrastructure;
 
 import model.Epic;
+import model.Status;
 import model.Subtask;
 import model.Task;
 
@@ -59,5 +60,48 @@ public class TaskManager {
             list.add(subtasks.get(subtaskId));
         }
         return list;
+    }
+
+    // Удаление всех задач
+    public void deleteAllTasks() {
+        tasks.clear();
+    }
+
+    public void deleteAllEpics() {
+        epics.clear();
+        subtasks.clear();
+    }
+
+    public void deleteAllSubtasks() {
+        subtasks.clear();
+        for (Epic epic : epics.values()) {
+            epic.removeSubtasks();
+            epic.setStatus(calculateStatus(epic));
+        }
+    }
+
+    // пересчёт статуса эпика
+    public Status calculateStatus(Epic epic) {
+        List<Integer> subtaskList = epic.getSubtasks();
+        if (subtaskList.isEmpty()) {
+            return Status.NEW;
+        }
+        int newStatus = 0;
+        int doneStatus = 0;
+        for (Integer subtaskId : subtaskList) {
+            if (subtasks.get(subtaskId).getStatus().equals(Status.NEW)) {
+                newStatus++;
+            }
+            if (subtasks.get(subtaskId).getStatus().equals(Status.DONE)) {
+                doneStatus++;
+            }
+        }
+        if (newStatus == subtaskList.size()) {
+            return Status.NEW;
+        }
+        if (doneStatus == subtaskList.size()) {
+            return Status.DONE;
+        }
+        return Status.IN_PROGRESS;
     }
 }
