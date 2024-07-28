@@ -133,6 +133,65 @@ public class TaskManager {
         return subtask;
     }
 
+    // Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
+    public void updateTask(Task task) {
+        if (task == null) {
+            System.out.println("The incoming task is null");
+            return;
+        }
+        if (!tasks.containsKey(task.getId())) {
+            System.out.println("The task has incorrect number");
+            return;
+        }
+        if (task.getStatus() == null) {
+            task.setStatus(Status.NEW);
+        }
+        tasks.put(task.getId(), task);
+    }
+
+    public void updateEpic(Epic epic) {
+        if (epic == null) {
+            System.out.println("The incoming epic is null");
+            return;
+        }
+        if (!epics.containsKey(epic.getId())) {
+            System.out.println("The epic has incorrect number");
+            return;
+        }
+        Epic saved = epics.get(epic.getId());
+        saved.setName(epic.getName());
+        saved.setDescription(epic.getDescription());
+    }
+
+    public void updateSubtask(Subtask subtask) {
+        if (subtask == null) {
+            System.out.println("The incoming subtask is null");
+            return;
+        }
+        if (!subtasks.containsKey(subtask.getId())) {
+            System.out.println("The subtask has incorrect number");
+            return;
+        }
+        int epicId = subtask.getEpicId();
+        if (!epics.containsKey(epicId)) {
+            System.out.println("The epic for subtask has incorrect number");
+            return;
+        }
+        List<Integer> epicSubtaskList = epics.get(epicId).getSubtasks();
+        if (!epicSubtaskList.contains(subtask.getId())) {
+            System.out.println("Неправильно указан эпик в подзадаче");
+            return;
+        }
+
+        if (subtask.getStatus() == null) {
+            subtask.setStatus(Status.NEW);
+        }
+        subtasks.put(subtask.getId(), subtask);
+
+        Epic epic = epics.get(epicId);
+        epic.setStatus(calculateStatus(epic));
+    }
+
     // пересчёт статуса эпика
     public Status calculateStatus(Epic epic) {
         List<Integer> subtaskList = epic.getSubtasks();
