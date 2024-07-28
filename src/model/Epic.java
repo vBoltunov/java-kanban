@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
     private final List<Integer> subtasks = new ArrayList<>();
@@ -12,5 +13,16 @@ public class Epic extends Task {
 
     public List<Integer> getSubtasks() {
         return subtasks;
+    }
+
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "subtasks=" + getSubtasks() +
+                ", id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", taskStatus=" + getStatus() +
+                '}';
     }
 }
