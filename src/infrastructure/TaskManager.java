@@ -192,6 +192,43 @@ public class TaskManager {
         epic.setStatus(calculateStatus(epic));
     }
 
+    // Удаление по идентификатору
+    public void deleteTaskById(int id) {
+        if (!tasks.containsKey(id)) {
+            System.out.println("Задачи с таким id не существует");
+            return;
+        }
+        tasks.remove(id);
+    }
+
+    public void deleteEpicById(int id) {
+        if (!epics.containsKey(id)) {
+            System.out.println("Эпика с таким id не существует");
+            return;
+        }
+        Epic saved = epics.get(id);
+
+        for (Integer subTaskId : saved.getSubtasks()) {
+            subtasks.remove(subTaskId);
+        }
+        epics.remove(id);
+    }
+
+    public void deleteSubtaskById(int id) {
+        if (!subtasks.containsKey(id)) {
+            System.out.println("Подзадачи с таким id не существует");
+            return;
+        }
+        Subtask subtask = subtasks.get(id);
+
+        int savedEpicId = subtask.getEpicId();
+        Epic savedEpic = epics.get(savedEpicId);
+        subtasks.remove(id);
+        savedEpic.deleteSubtask(id);
+
+        savedEpic.setStatus(calculateStatus(savedEpic));
+    }
+
     // пересчёт статуса эпика
     public Status calculateStatus(Epic epic) {
         List<Integer> subtaskList = epic.getSubtasks();
