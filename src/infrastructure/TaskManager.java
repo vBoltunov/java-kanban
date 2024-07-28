@@ -93,6 +93,46 @@ public class TaskManager {
         return subtasks.get(id);
     }
 
+    // Создание задач
+    public Task createTask(Task task) {
+        if (task == null) {
+            return null;
+        }
+        task.setId(generateTaskId());
+        tasks.put(task.getId(), task);
+        return task;
+    }
+
+    public Epic createEpic(Epic epic) {
+        if (epic == null) {
+            return null;
+        }
+        epic.setId(generateEpicId());
+        epics.put(epic.getId(), epic);
+        return epic;
+    }
+
+    public Subtask createSubtask(Subtask subtask) {
+        if (subtask == null) {
+            return null;
+        }
+        int saved = subtask.getEpicId();
+
+        if (!epics.containsKey(saved)) {
+            System.out.println("Такого эпика не существует");
+            return null;
+        }
+        subtask.setId(generateSubtaskId());
+        subtasks.put(subtask.getId(), subtask);
+
+        Epic epic = epics.get(saved);
+
+        epic.addSubtask(subtask.getId());
+
+        epic.setStatus(calculateStatus(epic));
+        return subtask;
+    }
+
     // пересчёт статуса эпика
     public Status calculateStatus(Epic epic) {
         List<Integer> subtaskList = epic.getSubtasks();
