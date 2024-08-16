@@ -1,4 +1,4 @@
-import infrastructure.TaskManager;
+import infrastructure.InMemoryTaskManager;
 import model.Epic;
 import model.enums.Status;
 import model.Subtask;
@@ -7,7 +7,7 @@ import model.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         // Создайте две задачи
         taskManager.createTask(new Task("Помыть пол", "Задача 1", Status.NEW));
         taskManager.createTask(new Task("Приготовить еду", "Задача 2", Status.NEW));
