@@ -13,15 +13,17 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Task> tasks;
     protected HashMap<Integer, Epic> epics;
     protected HashMap<Integer, Subtask> subtasks;
+    protected HistoryManager historyManager;
 
     protected int taskId = 0;
     protected int epicId = 0;
     protected int subtaskId = 0;
 
-    public InMemoryTaskManager() {
+    public InMemoryTaskManager(HistoryManager historyManager) {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
+        this.historyManager = historyManager;
     }
 
     public int generateTaskId() {
@@ -275,6 +277,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        return null;
+        return historyManager.getHistory();
     }
 }
