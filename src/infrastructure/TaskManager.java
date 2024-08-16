@@ -8,17 +8,10 @@ import model.enums.Status;
 import java.util.List;
 
 public interface TaskManager {
-    default int generateTaskId() {
-        return ++taskId;
-    }
 
-    default int generateEpicId() {
-        return ++epicId;
-    }
-
-    default int generateSubtaskId() {
-        return ++subtaskId;
-    }
+    int generateTaskId();
+    int generateEpicId();
+    int generateSubtaskId();
 
     // Получение списка всех задач
     List<Task> getAllTasks();
@@ -66,4 +59,7 @@ public interface TaskManager {
 
     // пересчёт статуса эпика
     Status calculateStatus(Epic epic);
+
+    // Получение истории задач
+    List<Task> getHistory();
 }

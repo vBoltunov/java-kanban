@@ -18,11 +18,22 @@ public class InMemoryTaskManager implements TaskManager {
     protected int epicId = 0;
     protected int subtaskId = 0;
 
-
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
+    }
+
+    public int generateTaskId() {
+        return ++taskId;
+    }
+
+    public int generateEpicId() {
+        return ++epicId;
+    }
+
+    public int generateSubtaskId() {
+        return ++subtaskId;
     }
 
     // Получение списка всех задач
@@ -260,5 +271,10 @@ public class InMemoryTaskManager implements TaskManager {
             return Status.DONE;
         }
         return Status.IN_PROGRESS;
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return null;
     }
 }
