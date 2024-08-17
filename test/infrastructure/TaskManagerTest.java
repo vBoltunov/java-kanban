@@ -27,10 +27,9 @@ class TaskManagerTest {
         Task task = taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
 
         Task savedTask = taskManager.getAllTasks().getFirst();
-        int savedTaskId = taskManager.getAllTasks().getFirst().getId();
 
         // Добавил сравнение id
-        assertEquals(task.getId(), savedTaskId, "Id исходной и записанной задач не совпадают");
+        assertEquals(task.getId(), savedTask.getId(), "Id исходной и записанной задач не совпадают");
         assertEquals(task, savedTask, "Исходная и записанная задачи не совпадают");
         assertEquals(task.hashCode(), savedTask.hashCode(),
                 "hashCode() исходной и записанной задач не совпадает");
@@ -47,11 +46,9 @@ class TaskManagerTest {
 
         Epic savedEpic = taskManager.getAllEpics().getFirst();
         Subtask savedSubtask = taskManager.getAllSubtasks().getFirst();
-        int savedEpicId = taskManager.getAllEpics().getFirst().getId();
-        int savedSubtaskId = taskManager.getAllSubtasks().getFirst().getId();
 
         // Добавил сравнение id
-        assertEquals(epic.getId(), savedEpicId, "Id исходного и записанного эпиков не совпадают");
+        assertEquals(epic.getId(), savedEpic.getId(), "Id исходного и записанного эпиков не совпадают");
         assertEquals(epic, savedEpic, "Исходный и записанный эпики не совпадают");
         assertEquals(epic.hashCode(), savedEpic.hashCode(),
                 "hashCode() исходного и записанного эпиков не совпадает");
@@ -59,7 +56,7 @@ class TaskManagerTest {
                 "toString() исходного и записанного эпиков не совпадает");
 
         // Добавил сравнение id
-        assertEquals(subtask.getId(), savedSubtaskId, "Id исходной и записанной подзадач не совпадают");
+        assertEquals(subtask.getId(), savedSubtask.getId(), "Id исходной и записанной подзадач не совпадают");
         assertEquals(subtask, savedSubtask, "Исходная и записанная подзадачи не совпадают");
         assertEquals(subtask.hashCode(), savedSubtask.hashCode(),
                 "hashCode() исходной и записанной подзадач не совпадает");
