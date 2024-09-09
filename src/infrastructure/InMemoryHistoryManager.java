@@ -16,6 +16,47 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private final List<Task> taskHistory = new ArrayList<>(10);
 
+    public List<Task> getTasks(){
+        List<Task> taskList = new ArrayList<>();
+        Node<Task> current = head;
+        while(current != null) {
+            taskList.add(current.getTask());
+            current = current.getNext();
+        }
+        return taskList;
+    }
+
+    public void linkLast(Task task) {
+        Node<Task> oldTail = tail;
+        Node<Task> newNode = new Node<>(oldTail, task, null);
+        tail = newNode;
+        if (oldTail == null) {
+            head = newNode;
+        } else {
+            oldTail.setNext(newNode);
+        }
+        int id = task.getId();
+        taskHistoryMap.put(id, newNode);
+    }
+
+    public void removeNode(Node<Task> node) {
+        Node<Task> next = node.getNext();
+        Node<Task> prev = node.getPrev();
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.setNext(next);
+            node.setNext(null);
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.setPrev(prev);
+            node.setNext(null);
+        }
+        node.setTask(null);
+    }
+
     @Override
     public void add(Task task) {
         if (taskHistory.size() == 10) {
