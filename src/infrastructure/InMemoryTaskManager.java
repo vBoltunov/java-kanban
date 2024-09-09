@@ -152,7 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
         int saved = subtask.getEpicId();
 
         if (!epics.containsKey(saved)) {
-            System.out.println("Такого эпика не существует");
+            System.out.println("Не передан номер эпика для записи подзадачи");
             return null;
         }
         subtask.setId(generateId());
@@ -232,7 +232,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         if (!tasks.containsKey(id)) {
-            System.out.println("Задачи с таким id не существует");
+            System.out.println("Задача с переданным id отсутствует в списке задач");
             return;
         }
         tasks.remove(id);
@@ -242,7 +242,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpicById(int id) {
         if (!epics.containsKey(id)) {
-            System.out.println("Эпика с таким id не существует");
+            System.out.println("Эпик с переданным id отсутствует в списке эпиков");
             return;
         }
         Epic saved = epics.get(id);
@@ -258,7 +258,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtaskById(int id) {
         if (!subtasks.containsKey(id)) {
-            System.out.println("Подзадачи с таким id не существует");
+            System.out.println("Подзадача с переданным id отсутствует в списке подзадач");
             return;
         }
         Subtask subtask = subtasks.get(id);
