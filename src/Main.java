@@ -10,40 +10,53 @@ public class Main {
 
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
-        // Создайте две задачи
-        taskManager.createTask(new Task("Помыть пол", "Задача 1", NEW));
-        taskManager.createTask(new Task("Приготовить еду", "Задача 2", NEW));
 
-        // Создайте эпик с двумя подзадачами
-        taskManager.createEpic(new Epic("Выполнить ФЗ №4", "Эпик 1"));
-        taskManager.createSubtask(new Subtask("Написать код", "Подзадача 1", NEW, 1));
-        taskManager.createSubtask(new Subtask("Отправить код на проверку", "Подзадача 2", NEW, 1));
+        // Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач.
+        System.out.println("Создаём две задачи, эпик с тремя подзадачами и эпик без подзадач...");
+        taskManager.createTask(new Task(1, "Помыть пол", "Задача 1", NEW));
+        taskManager.createTask(new Task(2, "Приготовить еду", "Задача 2", NEW));
 
-        // Создайте эпик с одной подзадачей
-        taskManager.createEpic(new Epic("Важный эпик 2", "Эпик 2"));
-        taskManager.createSubtask(new Subtask("Важное дело", "Подзадача 1", NEW, 2));
+        taskManager.createEpic(new Epic(3, "Выполнить ФЗ №6", "Эпик 1", NEW));
+        taskManager.createSubtask(new Subtask(4, "Написать код", "Подзадача 1", NEW, 3));
+        taskManager.createSubtask(new Subtask(
+                5, "Отправить код на проверку", "Подзадача 2", NEW, 3));
+        taskManager.createSubtask(new Subtask(
+                6, "Доработать код согласно ревью", "Подзадача 3", NEW, 3));
 
-        // Распечатайте списки эпиков, задач и подзадач через System.out.println(..)
-        System.out.println(taskManager.getAllTasks());
-        System.out.println(taskManager.getAllSubtasks());
-        System.out.println(taskManager.getAllEpics());
+        taskManager.createEpic(new Epic(7, "Эпичный эпик", "Эпик 2", NEW));
 
-        // Измените статусы созданных объектов, распечатайте их.
-        taskManager.getTaskById(1).setStatus(IN_PROGRESS);
-        taskManager.getTaskById(2).setStatus(DONE);
+        // Запросите созданные задачи несколько раз в разном порядке.
+        // После каждого запроса выведите историю и убедитесь, что в ней нет повторов.
+        System.out.println("Запрашиваем созданные задачи несколько раз в разном порядке " +
+                "и выводим историю после каждого запроса...");
+        taskManager.getTaskById(1);
+        System.out.println(taskManager.getHistory());
+        taskManager.getTaskById(2);
+        System.out.println(taskManager.getHistory());
+        taskManager.getEpicById(3);
+        System.out.println(taskManager.getHistory());
+        taskManager.getEpicById(7);
+        System.out.println(taskManager.getHistory());
+        System.out.println();
 
-        taskManager.getSubtaskById(1).setStatus(IN_PROGRESS);
-        Epic epic1 = taskManager.getEpicById(1);
-        epic1.setStatus(taskManager.calculateStatus(epic1));
+        // Удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться.
+        System.out.println("Удаляем одну из задач и проверяем, что она пропала из истории...");
+        taskManager.deleteTaskById(1);
+        System.out.println(taskManager.getHistory());
+        System.out.println();
 
-        taskManager.getSubtaskById(3).setStatus(DONE);
-        Epic epic2 = taskManager.getEpicById(2);
-        epic2.setStatus(taskManager.calculateStatus(epic2));
+        // Удалите эпик с тремя подзадачами и убедитесь, что из истории удалился как сам эпик, так и все его подзадачи.
+        System.out.println("Удаляем эпик с тремя подзадачами и проверяем, что он и его подзадачи пропали из истории...");
+        taskManager.deleteEpicById(3);
+        System.out.println(taskManager.getHistory());
+        System.out.println();
 
-        System.out.println(taskManager.getAllTasks());
-        System.out.println(taskManager.getAllSubtasks());
-        System.out.println(taskManager.getAllEpics());
-        System.out.println("Выводим историю просмотров:");
+        // С помощью сеттеров экземпляры задач позволяют изменить любое своё поле,
+        // но это может повлиять на данные внутри менеджера. Протестируйте эти кейсы и
+        // подумайте над возможными вариантами решения проблемы.
+        System.out.println("Тестируем сеттеры и проверяем, что параметры задачи изменились в истории...");
+        taskManager.getEpicById(7).setStatus(DONE);
+        taskManager.getEpicById(7).setId(8);
         System.out.println(taskManager.getHistory());
     }
 }
