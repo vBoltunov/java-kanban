@@ -15,9 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Subtask> subtasks;
     protected HistoryManager historyManager;
 
-    protected int taskId = 0;
-    protected int epicId = 0;
-    protected int subtaskId = 0;
+    protected int id = 0;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.tasks = new HashMap<>();
@@ -26,16 +24,9 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = historyManager;
     }
 
-    public int generateTaskId() {
-        return ++taskId;
-    }
-
-    public int generateEpicId() {
-        return ++epicId;
-    }
-
-    public int generateSubtaskId() {
-        return ++subtaskId;
+    // Изменил логику генерации id: теперь нумерация "сквозная"
+    public int generateId() {
+        return ++id;
     }
 
     // Получение списка всех задач
@@ -138,7 +129,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null) {
             return null;
         }
-        task.setId(generateTaskId());
+        task.setId(generateId());
         tasks.put(task.getId(), task);
         return task;
     }
@@ -148,7 +139,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic == null) {
             return null;
         }
-        epic.setId(generateEpicId());
+        epic.setId(generateId());
         epics.put(epic.getId(), epic);
         return epic;
     }
@@ -164,7 +155,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Такого эпика не существует");
             return null;
         }
-        subtask.setId(generateSubtaskId());
+        subtask.setId(generateId());
         subtasks.put(subtask.getId(), subtask);
 
         Epic epic = epics.get(saved);
@@ -237,7 +228,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStatus(calculateStatus(epic));
     }
 
-    // Удаление по идентификатору
+    // Удаление по идентификатору - теперь задачи удаляются и из истории просмотров
     @Override
     public void deleteTaskById(int id) {
         if (!tasks.containsKey(id)) {

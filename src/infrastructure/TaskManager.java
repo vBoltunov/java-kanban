@@ -9,12 +9,8 @@ import java.util.List;
 
 public interface TaskManager {
 
-    // методы для генерации идентификаторов
-    int generateTaskId();
-
-    int generateEpicId();
-
-    int generateSubtaskId();
+    // метод для генерации идентификаторов
+    int generateId();
 
     // Получение списка всех задач
     List<Task> getAllTasks();
