@@ -59,10 +59,14 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (taskHistory.size() == 10) {
-            taskHistory.removeFirst();
+        int id = task.getId();
+        if (taskHistoryMap.containsKey(id)) {
+            Node<Task> node = taskHistoryMap.get(id);
+            linkLast(task);
+            removeNode(node);
+        } else {
+            linkLast(task);
         }
-        taskHistory.add(task);
     }
 
     @Override
@@ -75,6 +79,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        return taskHistory;
+        return getTasks();
     }
 }
