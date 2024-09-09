@@ -134,23 +134,9 @@ class TaskManagerTest {
     }
 
     // Убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
-    @Test
-    public void historyManagerStoresPreviousVersionsOfTasks() {
-        taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
-
-        taskManager.getTaskById(1);
-
-        Task task1 = new Task(1,"Задача 1", "Описание задачи 1", IN_PROGRESS);
-
-        taskManager.updateTask(task1);
-
-        taskManager.getTaskById(1);
-
-        List<Task> list = taskManager.getHistory();
-
-        assertEquals(NEW, list.getFirst().getStatus(), "Статус задачи 1 должен быть NEW");
-        assertEquals(IN_PROGRESS, list.getLast().getStatus(), "Статус задачи 1 должен быть IN_PROGRESS");
-    }
+    /* Данный тест удалён, так как в ФЗ 6 появилась новая задача:
+    Избавиться от повторных просмотров в истории. Если какую-либо задачу посещали несколько раз,
+    то в истории должен остаться только её последний просмотр. Предыдущий должен быть удалён. */
 
     // More Tests :)
     @Test
