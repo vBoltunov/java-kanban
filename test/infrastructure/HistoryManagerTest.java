@@ -23,9 +23,9 @@ class HistoryManagerTest {
 
     @Test
     void add() {
-        Task task = new Task("Задача 1", "Описание задачи 1", NEW);
-        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
-        Subtask subtask = new Subtask("Подзадача 1", "Описание подзадачи 1", IN_PROGRESS, 1);
+        Task task = new Task(1,"Задача 1", "Описание задачи 1", NEW);
+        Epic epic = new Epic(2,"Эпик 1", "Описание эпика 1");
+        Subtask subtask = new Subtask(3,"Подзадача 1", "Описание подзадачи 1", IN_PROGRESS, 1);
 
         historyManager.add(task);
         historyManager.add(epic);
@@ -40,9 +40,9 @@ class HistoryManagerTest {
 
     @Test
     void getHistory() {
-        Task task = new Task("Задача 1", "Описание задачи 1", NEW);
-        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
-        Subtask subtask = new Subtask("Подзадача 1", "Описание подзадачи 1", IN_PROGRESS, 1);
+        Task task = new Task(1,"Задача 1", "Описание задачи 1", NEW);
+        Epic epic = new Epic(2,"Эпик 1", "Описание эпика 1");
+        Subtask subtask = new Subtask(3,"Подзадача 1", "Описание подзадачи 1", IN_PROGRESS, 1);
 
         historyManager.add(task);
         historyManager.add(epic);

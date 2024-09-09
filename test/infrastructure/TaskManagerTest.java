@@ -21,7 +21,6 @@ class TaskManagerTest {
         taskManager = Managers.getDefault();
     }
 
-    // Проверьте, что экземпляры класса Task равны друг другу, если равен их id
     @Test
     public void taskInstancesAreEqualWhenTheirIdsEqual() {
         Task task = taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
@@ -37,12 +36,11 @@ class TaskManagerTest {
                 "toString() исходной и записанной задач не совпадает");
     }
 
-    // Проверьте, что наследники класса Task равны друг другу, если равен их id
     @Test
     public void epicInstancesAreEqualWhenTheirIdsEqual() {
         Epic epic = taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask(1,"Позадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(1,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
 
         Epic savedEpic = taskManager.getAllEpics().getFirst();
         Subtask savedSubtask = taskManager.getAllSubtasks().getFirst();
@@ -64,13 +62,6 @@ class TaskManagerTest {
                 "toString() исходной и записанной подзадач не совпадает");
     }
 
-    // Проверьте, что объект Epic нельзя добавить в самого себя в виде подзадачи
-    // проверьте, что объект Subtask нельзя сделать своим же эпиком
-    /* Такие проверки невозможно выполнить, т.к. методы по созданию
-    задач/подзадач/эпиков принимают объекты определённого типа */
-
-    // Убедитесь, что утилитарный класс всегда возвращает
-    // проинициализированные и готовые к работе экземпляры менеджеров;
     @Test
     public void shouldReturnInMemoryTaskManagerByDefault() {
 
@@ -88,19 +79,18 @@ class TaskManagerTest {
                 "Менеджер возвращает неправильный класс");
     }
 
-    // Проверьте, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id
     @Test
     public void taskManagerWorksWithVariousTaskTypesAndAbleToFindThemById() {
         Task task = taskManager.createTask(new Task(1, "Задача 1", "Описание задачи 1"));
-        Epic epic = taskManager.createEpic(new Epic(1, "Эпик 1", "Описание эпика 1"));
+        Epic epic = taskManager.createEpic(new Epic(2, "Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask(1, "Позадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(3, "Подзадача 1", "Описание подзадачи 1", NEW, 2));
 
         assertEquals(Task.class, taskManager.getTaskById(1).getClass(),
                 "Тип исходной задачи и сохранённой в менеджере не совпадают");
-        assertEquals(Epic.class, taskManager.getEpicById(1).getClass(),
+        assertEquals(Epic.class, taskManager.getEpicById(2).getClass(),
                 "Тип исходной задачи и сохранённой в менеджере не совпадают");
-        assertEquals(Subtask.class, taskManager.getSubtaskById(1).getClass(),
+        assertEquals(Subtask.class, taskManager.getSubtaskById(3).getClass(),
                 "Тип исходной задачи и сохранённой в менеджере не совпадают");
         assertEquals(task.getId(), taskManager.getAllTasks().getFirst().getId(),
                 "Id исходной задачи и сохранённой в менеджере не совпадают");
@@ -110,7 +100,6 @@ class TaskManagerTest {
                 "Id исходной подзадачи и сохранённой в менеджере не совпадают");
     }
 
-    // Проверьте, что задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера
     @Test
     public void taskManagerShouldWorkWithIncomingIdsAndGeneratedIds() {
         Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1"));
@@ -120,7 +109,6 @@ class TaskManagerTest {
         assertEquals(task2, taskManager.getTaskById(2), "Вторая задача должна иметь идентификатор 2");
     }
 
-    // Создайте тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
     @Test
     public void taskManagerShouldStoreTaskFieldsUnchanged() {
         taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
@@ -138,7 +126,6 @@ class TaskManagerTest {
     Избавиться от повторных просмотров в истории. Если какую-либо задачу посещали несколько раз,
     то в истории должен остаться только её последний просмотр. Предыдущий должен быть удалён. */
 
-    // More Tests :)
     @Test
     void getAllTasks() {
         Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
@@ -254,28 +241,28 @@ class TaskManagerTest {
 
     @Test
     void updateSubtaskWithNull() {
-        taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
+        taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subTask = taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
 
         taskManager.updateSubtask(null);
 
-        assertEquals(subTask, taskManager.getSubtaskById(1),
+        assertEquals(subTask, taskManager.getSubtaskById(2),
                 "Если передан null, подзадача не должна обновляться");
     }
 
     @Test
     void updateSubtaskWithWrongId() {
-        taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
+        taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subtask1 = taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
-        Subtask subtask2 = new Subtask(2, "Подзадача 2",
+                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
+        Subtask subtask2 = new Subtask(3, "Подзадача 2",
                 "Описание подзадачи 2", IN_PROGRESS, 1);
 
         taskManager.updateSubtask(subtask2);
 
-        assertEquals(subtask1, taskManager.getSubtaskById(1), "Подзадача не должна изменяться");
-        assertNull(taskManager.getSubtaskById(2), "Вторая подзадача не должна быть записана");
+        assertEquals(subtask1, taskManager.getSubtaskById(2), "Подзадача не должна изменяться");
+        assertNull(taskManager.getSubtaskById(3), "Вторая подзадача не должна быть записана");
     }
 
     @Test
@@ -298,12 +285,13 @@ class TaskManagerTest {
 
     @Test
     void deleteSubtaskById() {
-        taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
-        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
+        taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
+        taskManager.createSubtask(new Subtask(
+                2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
 
-        taskManager.deleteSubtaskById(1);
+        taskManager.deleteSubtaskById(2);
 
-        assertNull(taskManager.getSubtaskById(1), "Подзадача не была удалена");
+        assertNull(taskManager.getSubtaskById(2), "Подзадача не была удалена");
         assertEquals(0, taskManager.getEpicById(1).getSubtasks().size(),
                 "Список подзадач эпика должен быть пуст");
     }
@@ -330,14 +318,14 @@ class TaskManagerTest {
 
     @Test
     void deleteSubtaskByWrongId() {
-        taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
+        taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
 
         taskManager.deleteSubtaskById(3);
 
         assertNull(taskManager.getSubtaskById(3), "Должен возвращаться null, если id не существует");
-        assertEquals(subtask, taskManager.getSubtaskById(1), "Подзадача не должна измениться");
+        assertEquals(subtask, taskManager.getSubtaskById(2), "Подзадача не должна измениться");
     }
 
     @Test
@@ -412,28 +400,30 @@ class TaskManagerTest {
         Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
         Epic epic = taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 2));
 
         taskManager.getTaskById(1);
-        taskManager.getEpicById(1);
-        taskManager.getSubtaskById(1);
+        taskManager.getEpicById(2);
+        taskManager.getSubtaskById(3);
         taskManager.getTaskById(1);
-        taskManager.getEpicById(1);
-        taskManager.getSubtaskById(1);
+        taskManager.getEpicById(2);
+        taskManager.getSubtaskById(3);
         taskManager.getTaskById(1);
-        taskManager.getEpicById(1);
-        taskManager.getSubtaskById(1);
+        taskManager.getEpicById(2);
+        taskManager.getSubtaskById(3);
         taskManager.getTaskById(1);
 
         List<Task> list = taskManager.getHistory();
 
-        assertEquals(10, list.size(), "Длина списка должна быть равна 10");
-        assertEquals(task, list.getFirst(), "Задача 1 должна быть первой в списке");
+        assertEquals(3, list.size(), "Длина списка должна быть равна 3");
+        assertEquals(epic, list.getFirst(), "Эпик 1 должен быть первым в списке");
         assertEquals(task, list.getLast(), "Задача 1 должна быть последней в списке");
 
-        taskManager.getSubtaskById(1);
+        taskManager.getSubtaskById(3);
 
-        assertEquals(epic, list.getFirst(), "Эпик 1 должен быть первым в списке");
-        assertEquals(subtask, list.getLast(), "Подзадача 1 должна быть последней в списке");
+        List<Task> list1 = taskManager.getHistory();
+
+        assertEquals(epic, list1.getFirst(), "Эпик 1 должен быть первым в списке");
+        assertEquals(subtask, list1.getLast(), "Подзадача 1 должна быть последней в списке");
     }
 }
