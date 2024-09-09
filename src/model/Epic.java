@@ -1,5 +1,7 @@
 package model;
 
+import model.enums.Status;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,10 @@ public class Epic extends Task {
 
     public Epic(int id, String name, String description) {
         super(id, name, description);
+    }
+
+    public Epic(int id, String name, String description, Status status) {
+        super(id, name, description, status);
     }
 
     public List<Integer> getSubtasks() {
