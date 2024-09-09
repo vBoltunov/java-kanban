@@ -14,10 +14,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> tail;
 
-    public List<Task> getTasks(){
+    public List<Task> getTasks() {
         List<Task> taskList = new ArrayList<>();
         Node<Task> current = head;
-        while(current != null) {
+        while (current != null) {
             taskList.add(current.getTask());
             current = current.getNext();
         }
