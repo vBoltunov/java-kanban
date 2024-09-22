@@ -1,6 +1,7 @@
 package model;
 
 import model.enums.Status;
+import model.enums.TaskType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,10 @@ public class Epic extends Task {
 
     public void removeSubtasks() {
         subtasks.clear();
+    }
+
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
 
     @Override
