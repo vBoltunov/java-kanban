@@ -10,18 +10,18 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected HashMap<Integer, Task> tasks;
-    protected HashMap<Integer, Epic> epics;
-    protected HashMap<Integer, Subtask> subtasks;
-    protected HistoryManager historyManager;
+    protected static HashMap<Integer, Task> tasks;
+    protected static HashMap<Integer, Epic> epics;
+    protected static HashMap<Integer, Subtask> subtasks;
+    protected static HistoryManager historyManager;
 
     protected int id = 0;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
-        this.tasks = new HashMap<>();
-        this.epics = new HashMap<>();
-        this.subtasks = new HashMap<>();
-        this.historyManager = historyManager;
+        tasks = new HashMap<>();
+        epics = new HashMap<>();
+        subtasks = new HashMap<>();
+        InMemoryTaskManager.historyManager = historyManager;
     }
 
     // Изменил логику генерации id: теперь нумерация "сквозная"
