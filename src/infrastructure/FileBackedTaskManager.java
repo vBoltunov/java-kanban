@@ -4,6 +4,8 @@ import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
+import model.enums.Status;
+import model.enums.TaskType;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -129,5 +131,35 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         } catch (IOException exp) {
             throw new ManagerSaveException("Произошла ошибка записи в файл", exp);
         }
+    }
+
+    protected static Task fromString(String value) {
+        Task task;
+        String[] parts = value.split(",");
+        int id = Integer.parseInt(parts[0]);
+        TaskType taskType = TaskType.valueOf(parts[1]);
+        String name = parts[2];
+        Status status = Status.valueOf(parts[3]);
+        String description = parts[4];
+        switch (taskType) {
+            case TASK:
+                task = new Task(id, name, description);
+                task.setStatus(status);
+                break;
+
+            case EPIC:
+                task = new Epic(id, name, description);
+                task.setStatus(status);
+                break;
+
+            case SUBTASK:
+                int epicId = Integer.parseInt(parts[5]);
+                task = new Subtask(id, name, description, epicId);
+                task.setStatus(status);
+                break;
+            default:
+                throw new ManagerSaveException("Неизвестный тип задачи: " + taskType);
+        }
+        return task;
     }
 }
