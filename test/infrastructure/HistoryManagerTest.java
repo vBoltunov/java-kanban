@@ -33,7 +33,7 @@ class HistoryManagerTest {
 
         List<Task> list = historyManager.getHistory();
 
-        assertEquals(task, list.get(0), "Задача 1 дожна быть первой в списке");
+        assertEquals(task, list.get(0), "Задача 1 должна быть первой в списке");
         assertEquals(epic, list.get(1), "Эпик 1 должен быть вторым в списке");
         assertEquals(subtask, list.get(2), "Подзадача 1 должна быть третьей в списке");
     }
