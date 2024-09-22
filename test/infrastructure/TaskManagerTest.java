@@ -45,7 +45,6 @@ class TaskManagerTest {
         Epic savedEpic = taskManager.getAllEpics().getFirst();
         Subtask savedSubtask = taskManager.getAllSubtasks().getFirst();
 
-        // Добавил сравнение id
         assertEquals(epic.getId(), savedEpic.getId(), "Id исходного и записанного эпиков не совпадают");
         assertEquals(epic, savedEpic, "Исходный и записанный эпики не совпадают");
         assertEquals(epic.hashCode(), savedEpic.hashCode(),
@@ -53,7 +52,6 @@ class TaskManagerTest {
         assertEquals(epic.toString(), savedEpic.toString(),
                 "toString() исходного и записанного эпиков не совпадает");
 
-        // Добавил сравнение id
         assertEquals(subtask.getId(), savedSubtask.getId(), "Id исходной и записанной подзадач не совпадают");
         assertEquals(subtask, savedSubtask, "Исходная и записанная подзадачи не совпадают");
         assertEquals(subtask.hashCode(), savedSubtask.hashCode(),
@@ -120,11 +118,6 @@ class TaskManagerTest {
         assertEquals(NEW, taskManager.getTaskById(1).getStatus(),
                 "Неправильно сохраняется статус задачи");
     }
-
-    // Убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
-    /* Данный тест удалён, так как в ФЗ 6 появилась новая задача:
-    Избавиться от повторных просмотров в истории. Если какую-либо задачу посещали несколько раз,
-    то в истории должен остаться только её последний просмотр. Предыдущий должен быть удалён. */
 
     @Test
     void getAllTasks() {

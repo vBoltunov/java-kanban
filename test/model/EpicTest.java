@@ -19,7 +19,6 @@ class EpicTest {
         epic = taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1", NEW));
     }
 
-    // Новый тест - Внутри эпиков не должно оставаться неактуальных id подзадач.
     @Test
     public void epicHasNoIrrelevantSubtasksIds() {
         taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
