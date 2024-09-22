@@ -136,8 +136,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    protected static Task fromString(String value) {
-        Task task;
+    protected static Task parseFromString(String value) {
+        Task parsedTask;
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
         TaskType taskType = TaskType.valueOf(parts[1]);
@@ -146,24 +146,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String description = parts[4];
         switch (taskType) {
             case TASK:
-                task = new Task(id, name, description);
-                task.setStatus(status);
+                parsedTask = new Task(id, name, description);
+                parsedTask.setStatus(status);
                 break;
 
             case EPIC:
-                task = new Epic(id, name, description);
-                task.setStatus(status);
+                parsedTask = new Epic(id, name, description);
+                parsedTask.setStatus(status);
                 break;
 
             case SUBTASK:
                 int epicId = Integer.parseInt(parts[5]);
-                task = new Subtask(id, name, description, epicId);
-                task.setStatus(status);
+                parsedTask = new Subtask(id, name, description, epicId);
+                parsedTask.setStatus(status);
                 break;
             default:
                 throw new ManagerSaveException("Неизвестный тип задачи: " + taskType);
         }
-        return task;
+        return parsedTask;
     }
 
     protected static FileBackedTaskManager loadFromFile(File file) {
@@ -177,17 +177,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 if (line.contains("id")) {
                     continue;
                 }
-                Task task = fromString(line);
-                int id = task.getId();
-                switch (task.getType()) {
+                Task loadedTask = parseFromString(line);
+                int id = loadedTask.getId();
+                switch (loadedTask.getType()) {
                     case TASK:
-                        tasks.put(id, task);
+                        tasks.put(id, loadedTask);
                         break;
                     case EPIC:
-                        epics.put(id, (Epic) task);
+                        epics.put(id, (Epic) loadedTask);
                         break;
                     case SUBTASK:
-                        subtasks.put(id, (Subtask) task);
+                        subtasks.put(id, (Subtask) loadedTask);
                         Epic epic = epics.get(subtasks.get(id).getEpicId());
                         epics.put(id, epic);
                         break;
