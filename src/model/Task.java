@@ -1,6 +1,7 @@
 package model;
 
 import model.enums.Status;
+import model.enums.TaskType;
 
 import java.util.Objects;
 
@@ -67,6 +68,10 @@ public class Task {
         this.description = description;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -84,11 +89,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + getId() +
-                ", name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", taskStatus=" + getStatus() +
-                '}';
+        return getId() + ",TASK," + getName() + "," + getStatus() + "," + getDescription();
     }
 }

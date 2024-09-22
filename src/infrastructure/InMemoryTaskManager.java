@@ -10,26 +10,24 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected HashMap<Integer, Task> tasks;
-    protected HashMap<Integer, Epic> epics;
-    protected HashMap<Integer, Subtask> subtasks;
-    protected HistoryManager historyManager;
+    protected static HashMap<Integer, Task> tasks;
+    protected static HashMap<Integer, Epic> epics;
+    protected static HashMap<Integer, Subtask> subtasks;
+    protected static HistoryManager historyManager;
 
     protected int id = 0;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
-        this.tasks = new HashMap<>();
-        this.epics = new HashMap<>();
-        this.subtasks = new HashMap<>();
-        this.historyManager = historyManager;
+        tasks = new HashMap<>();
+        epics = new HashMap<>();
+        subtasks = new HashMap<>();
+        InMemoryTaskManager.historyManager = historyManager;
     }
 
-    // Изменил логику генерации id: теперь нумерация "сквозная"
     public int generateId() {
         return ++id;
     }
 
-    // Получение списка всех задач
     @Override
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
@@ -58,7 +56,6 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
 
-    // Удаление всех задач
     @Override
     public void deleteAllTasks() {
         for (Task task : tasks.values()) {
@@ -92,7 +89,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    // Получение по идентификатору
     @Override
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
@@ -123,7 +119,6 @@ public class InMemoryTaskManager implements TaskManager {
         return subtask;
     }
 
-    // Создание задач
     @Override
     public Task createTask(Task task) {
         if (task == null) {
@@ -166,7 +161,6 @@ public class InMemoryTaskManager implements TaskManager {
         return subtask;
     }
 
-    // Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
     @Override
     public void updateTask(Task task) {
         if (task == null) {
@@ -228,7 +222,6 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStatus(calculateStatus(epic));
     }
 
-    // Удаление по идентификатору - теперь задачи удаляются и из истории просмотров
     @Override
     public void deleteTaskById(int id) {
         if (!tasks.containsKey(id)) {
@@ -272,7 +265,6 @@ public class InMemoryTaskManager implements TaskManager {
         savedEpic.setStatus(calculateStatus(savedEpic));
     }
 
-    // пересчёт статуса эпика
     @Override
     public Status calculateStatus(Epic epic) {
         List<Integer> subtaskList = epic.getSubtasks();

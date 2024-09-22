@@ -1,6 +1,7 @@
 package model;
 
 import model.enums.Status;
+import model.enums.TaskType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +37,12 @@ public class Epic extends Task {
         subtasks.clear();
     }
 
+    public TaskType getType() {
+        return TaskType.EPIC;
+    }
+
     @Override
     public String toString() {
-        return "Epic{" +
-                "subtasks=" + getSubtasks() +
-                ", id=" + getId() +
-                ", name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", taskStatus=" + getStatus() +
-                '}';
+        return getId() + ",EPIC," + getName() + "," + getStatus() + "," + getDescription();
     }
 }
