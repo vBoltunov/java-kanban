@@ -32,7 +32,7 @@ public class FileBackedTaskManagerTest {
 
     // Проверить сохранение и загрузку пустого файла
     @Test
-    public void shouldSaveAndLoadFromEmptyFile() {
+    public void saveAndLoadFromEmptyFile() {
         saveManager.save();
 
         assertTrue(loadManager.getAllTasks().isEmpty());
@@ -42,7 +42,7 @@ public class FileBackedTaskManagerTest {
 
     // Проверить сохранение нескольких задач, загрузку нескольких задач
     @Test
-    public void shouldSaveAndLoadFromNonEmptyFile() {
+    public void saveAndLoadFromNonEmptyFile() {
         saveManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
         saveManager.createTask(new Task(2,"Задача 2", "Описание задачи 2", NEW));
         saveManager.createEpic(new Epic(3,"Эпик 1", "Описание эпика 1", NEW));

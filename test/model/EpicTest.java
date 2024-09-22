@@ -20,7 +20,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicHasNoIrrelevantSubtasksIds() {
+    public void epicHasNoDeletedSubtasks() {
         taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
         taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 1));
         taskManager.deleteSubtaskById(2);
@@ -30,19 +30,19 @@ class EpicTest {
     }
 
     @Test
-    public void epicHasNewStatusWhenSubtaskListIsEmpty() {
+    public void emptyEpicHasNewStatus() {
         assertEquals(NEW, epic.getStatus(), "Статус генерируется неправильно");
     }
 
     @Test
-    public void epicHasNewStatusWhenAllSubtasksAreNew() {
+    public void newEpicHasNewStatus() {
         taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
         taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 1));
         assertEquals(NEW, epic.getStatus(), "Статус рассчитывается неправильно");
     }
 
     @Test
-    public void epicHasDoneStatusWhenAllSubtasksAreDone() {
+    public void doneEpicHasDoneStatus() {
         taskManager.createSubtask(new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
         taskManager.createSubtask(new Subtask(3,"Подзадача 2", "Описание подзадачи 2", NEW, 1));
         taskManager.updateSubtask(new Subtask(2, "Подзадача 1", "Описание подзадачи 1", DONE, 1));
@@ -51,7 +51,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicHasInProgressStatusWhenSubtasksArePartiallyDone() {
+    public void epicInProgressWhenSubtasksPartiallyDone() {
         taskManager.createSubtask(new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
         taskManager.createSubtask(new Subtask(3,"Подзадача 2", "Описание подзадачи 2", NEW, 1));
         taskManager.updateSubtask(new Subtask(2, "Подзадача 1", "Описание подзадачи 1", DONE, 1));
@@ -60,7 +60,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicHasInProgressStatusWhenSubtasksAreInProgress() {
+    public void epicInProgressWhenSubtasksInProgress() {
         taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
         taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 1));
         taskManager.updateSubtask(new Subtask(1, "Подзадача 1", "Описание подзадачи 1", IN_PROGRESS, 1));

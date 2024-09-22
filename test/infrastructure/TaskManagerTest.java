@@ -22,7 +22,7 @@ class TaskManagerTest {
     }
 
     @Test
-    public void taskInstancesAreEqualWhenTheirIdsEqual() {
+    public void tasksEqualWhenIdsEqual() {
         Task task = taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
 
         Task savedTask = taskManager.getAllTasks().getFirst();
@@ -37,7 +37,7 @@ class TaskManagerTest {
     }
 
     @Test
-    public void epicInstancesAreEqualWhenTheirIdsEqual() {
+    public void epicsEqualWhenIdsEqual() {
         Epic epic = taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
                 new Subtask(1,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
@@ -61,7 +61,7 @@ class TaskManagerTest {
     }
 
     @Test
-    public void shouldReturnInMemoryTaskManagerByDefault() {
+    public void createDefaultTaskManager() {
 
         assertNotNull(taskManager, "Task Manager не был создан");
         assertInstanceOf(InMemoryTaskManager.class, taskManager,
@@ -69,7 +69,7 @@ class TaskManagerTest {
     }
 
     @Test
-    public void shouldReturnInMemoryHistoryManagerByDefault() {
+    public void createDefaultHistoryManager() {
         HistoryManager historyManager = Managers.getDefaultHistory();
 
         assertNotNull(historyManager, "History manager не был создан");
@@ -78,7 +78,7 @@ class TaskManagerTest {
     }
 
     @Test
-    public void taskManagerWorksWithVariousTaskTypesAndAbleToFindThemById() {
+    public void createAnyTaskTypesAndFindThemById() {
         Task task = taskManager.createTask(new Task(1, "Задача 1", "Описание задачи 1"));
         Epic epic = taskManager.createEpic(new Epic(2, "Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
@@ -99,7 +99,7 @@ class TaskManagerTest {
     }
 
     @Test
-    public void taskManagerShouldWorkWithIncomingIdsAndGeneratedIds() {
+    public void useIncomingIdsAndGeneratedIds() {
         Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1"));
         Task task2 = taskManager.createTask(new Task(2, "Задача 2", "Описание задачи 2"));
 
@@ -108,7 +108,7 @@ class TaskManagerTest {
     }
 
     @Test
-    public void taskManagerShouldStoreTaskFieldsUnchanged() {
+    public void storeTaskFieldsUnchanged() {
         taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
 
         assertEquals("Задача 1", taskManager.getTaskById(1).getName(),
@@ -180,7 +180,7 @@ class TaskManagerTest {
     }
 
     @Test
-    void updateTaskWithNextTaskWithNullStatus() {
+    void updateTaskWithNullStatusTask() {
         taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
         Task task2 = new Task(1, "Задача 2", "Описание задачи 2", null);
 
@@ -378,7 +378,7 @@ class TaskManagerTest {
     }
 
     @Test
-    void getSubtaskListFromEpicWithWrongId() {
+    void getSubtasksFromEpicWithWrongId() {
         taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
         taskManager.createSubtask(
