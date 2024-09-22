@@ -7,7 +7,10 @@ import model.Task;
 import model.enums.Status;
 import model.enums.TaskType;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -161,5 +164,40 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 throw new ManagerSaveException("Неизвестный тип задачи: " + taskType);
         }
         return task;
+    }
+
+    protected static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(historyManager, file);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            while (reader.ready()) {
+                String line = reader.readLine();
+                if (line.isEmpty()) {
+                    break;
+                }
+                if (line.contains("id")) {
+                    continue;
+                }
+                Task task = fromString(line);
+                int id = task.getId();
+                switch (task.getType()) {
+                    case TASK:
+                        tasks.put(id, task);
+                        break;
+                    case EPIC:
+                        epics.put(id, (Epic) task);
+                        break;
+                    case SUBTASK:
+                        subtasks.put(id, (Subtask) task);
+                        Epic epic = epics.get(subtasks.get(id).getEpicId());
+                        epics.put(id, epic);
+                        break;
+                }
+            }
+        } catch (FileNotFoundException exp) {
+            throw new RuntimeException("Файл не найден", exp);
+        } catch (IOException exp) {
+            throw new ManagerSaveException("Произошла ошибка чтения из файла", exp);
+        }
+        return manager;
     }
 }
