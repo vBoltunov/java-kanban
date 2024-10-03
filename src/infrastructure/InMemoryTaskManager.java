@@ -6,6 +6,7 @@ import model.Subtask;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Subtask> getSubtaskList(Epic epic) {
         if (!epics.containsValue(epic)) {
             System.out.println("Такого эпика не существует");
-            return null;
+            return Collections.emptyList();
         }
         List<Subtask> list = new ArrayList<>();
         for (Integer subtaskId : epic.getSubtasks()) {
