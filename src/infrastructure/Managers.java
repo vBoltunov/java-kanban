@@ -2,6 +2,10 @@ package infrastructure;
 
 public class Managers {
 
+    private Managers() {
+        throw new IllegalStateException("Утилитарный класс");
+    }
+
     public static TaskManager getDefault() {
         return new InMemoryTaskManager(getDefaultHistory());
     }
