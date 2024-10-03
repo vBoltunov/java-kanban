@@ -385,7 +385,7 @@ class TaskManagerTest {
                 new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
         taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 1));
 
-        assertNull(taskManager.getSubtaskList(epic2), "Должен возвращаться null");
+        assertTrue(taskManager.getSubtaskList(epic2).isEmpty(), "Должен возвращаться пустой список");
     }
 
     @Test
