@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class InMemoryTaskManager implements TaskManager {
+
+    Logger logger = Logger.getLogger(getClass().getName());
+
     protected static HashMap<Integer, Task> tasks;
     protected static HashMap<Integer, Epic> epics;
     protected static HashMap<Integer, Subtask> subtasks;
@@ -47,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Subtask> getSubtaskList(Epic epic) {
         if (!epics.containsValue(epic)) {
-            System.out.println("Такого эпика не существует");
+            logger.info("Такого эпика не существует");
             return Collections.emptyList();
         }
         List<Subtask> list = new ArrayList<>();
@@ -148,7 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
         int saved = subtask.getEpicId();
 
         if (!epics.containsKey(saved)) {
-            System.out.println("Не передан номер эпика для записи подзадачи");
+            logger.info("Не передан номер эпика для записи подзадачи");
             return null;
         }
         subtask.setId(generateId());
@@ -165,11 +169,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         if (task == null) {
-            System.out.println("Передана пустая задача");
+            logger.info("Передана пустая задача");
             return;
         }
         if (!tasks.containsKey(task.getId())) {
-            System.out.println("Некорректный номер задачи");
+            logger.info("Некорректный номер задачи");
             return;
         }
         if (task.getStatus() == null) {
@@ -181,11 +185,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateEpic(Epic epic) {
         if (epic == null) {
-            System.out.println("Передан пустой эпик");
+            logger.info("Передан пустой эпик");
             return;
         }
         if (!epics.containsKey(epic.getId())) {
-            System.out.println("Некорректный номер эпика");
+            logger.info("Некорректный номер эпика");
             return;
         }
         Epic saved = epics.get(epic.getId());
@@ -196,21 +200,21 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         if (subtask == null) {
-            System.out.println("Передана пустая подзадача");
+            logger.info("Передана пустая подзадача");
             return;
         }
         if (!subtasks.containsKey(subtask.getId())) {
-            System.out.println("Некорректный номер подзадачи");
+            logger.info("Некорректный номер подзадачи");
             return;
         }
         int epicId = subtask.getEpicId();
         if (!epics.containsKey(epicId)) {
-            System.out.println("Подзадача имеет некорректный номер эпика");
+            logger.info("Подзадача имеет некорректный номер эпика");
             return;
         }
         List<Integer> epicSubtaskList = epics.get(epicId).getSubtasks();
         if (!epicSubtaskList.contains(subtask.getId())) {
-            System.out.println("Неправильно указан эпик в подзадаче");
+            logger.info("Неправильно указан эпик в подзадаче");
             return;
         }
 
@@ -226,7 +230,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         if (!tasks.containsKey(id)) {
-            System.out.println("Задача с переданным id отсутствует в списке задач");
+            logger.info("Задача с переданным id отсутствует в списке задач");
             return;
         }
         tasks.remove(id);
@@ -236,7 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpicById(int id) {
         if (!epics.containsKey(id)) {
-            System.out.println("Эпик с переданным id отсутствует в списке эпиков");
+            logger.info("Эпик с переданным id отсутствует в списке эпиков");
             return;
         }
         Epic saved = epics.get(id);
@@ -252,7 +256,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtaskById(int id) {
         if (!subtasks.containsKey(id)) {
-            System.out.println("Подзадача с переданным id отсутствует в списке подзадач");
+            logger.info("Подзадача с переданным id отсутствует в списке подзадач");
             return;
         }
         Subtask subtask = subtasks.get(id);
