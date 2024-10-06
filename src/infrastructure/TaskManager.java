@@ -52,4 +52,6 @@ public interface TaskManager {
     Status calculateStatus(Epic epic);
 
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 }
