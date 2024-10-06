@@ -263,9 +263,9 @@ public class InMemoryTaskManager implements TaskManager {
             logger.info("Эпик не найден");
             return;
         }
-        Epic saved = epics.get(id);
+        Epic savedEpic = epics.get(id);
 
-        for (Integer subtaskId : saved.getSubtasks()) {
+        for (Integer subtaskId : savedEpic.getSubtasks()) {
             historyManager.remove(subtaskId);
             subtasks.remove(subtaskId);
         }
