@@ -6,6 +6,8 @@ import infrastructure.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static model.enums.Status.NEW;
@@ -22,7 +24,8 @@ class TaskTest {
     void beforeEach() {
         taskManager = Managers.getDefault();
         historyManager = Managers.getDefaultHistory();
-        task = new Task("Задача 1", "Описание задачи 1", NEW);
+        task = new Task("Задача 1", "Описание задачи 1", NEW,
+                LocalDateTime.of(2024, 11, 5, 1, 0), Duration.ofMinutes(10));
     }
 
     @Test

@@ -6,6 +6,8 @@ import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static model.enums.Status.IN_PROGRESS;
@@ -23,11 +25,13 @@ class TaskManagerTest {
 
     @Test
     void tasksEqualWhenIdsEqual() {
-        Task task = taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+
+        Task task = taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW,
+                startTime, Duration.ofMinutes(10)));
 
         Task savedTask = taskManager.getAllTasks().getFirst();
 
-        // Добавил сравнение id
         assertEquals(task.getId(), savedTask.getId(), "Id исходной и записанной задач не совпадают");
         assertEquals(task, savedTask, "Исходная и записанная задачи не совпадают");
         assertEquals(task.hashCode(), savedTask.hashCode(),
@@ -38,9 +42,12 @@ class TaskManagerTest {
 
     @Test
     void epicsEqualWhenIdsEqual() {
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+
         Epic epic = taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask(1,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(1,"Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime, Duration.ofMinutes(10)));
 
         Epic savedEpic = taskManager.getAllEpics().getFirst();
         Subtask savedSubtask = taskManager.getAllSubtasks().getFirst();
@@ -79,10 +86,14 @@ class TaskManagerTest {
 
     @Test
     void createAnyTaskTypesAndFindThemById() {
-        Task task = taskManager.createTask(new Task(1, "Задача 1", "Описание задачи 1"));
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+        Task task = taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW,
+                startTime1, Duration.ofMinutes(10)));
         Epic epic = taskManager.createEpic(new Epic(2, "Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask(3, "Подзадача 1", "Описание подзадачи 1", NEW, 2));
+                new Subtask(3, "Подзадача 1", "Описание подзадачи 1", NEW,
+                        2, startTime2, Duration.ofMinutes(20)));
 
         assertEquals(Task.class, taskManager.getTaskById(1).getClass(),
                 "Тип исходной задачи и сохранённой в менеджере не совпадают");
@@ -100,8 +111,12 @@ class TaskManagerTest {
 
     @Test
     void useIncomingIdsAndGeneratedIds() {
-        Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1"));
-        Task task2 = taskManager.createTask(new Task(2, "Задача 2", "Описание задачи 2"));
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+        Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime1, Duration.ofMinutes(10)));
+        Task task2 = taskManager.createTask(new Task(2, "Задача 2", "Описание задачи 2", NEW,
+                startTime2, Duration.ofMinutes(10)));
 
         assertEquals(task1, taskManager.getTaskById(1), "Первая задача должна иметь идентификатор 1");
         assertEquals(task2, taskManager.getTaskById(2), "Вторая задача должна иметь идентификатор 2");
@@ -109,7 +124,9 @@ class TaskManagerTest {
 
     @Test
     void storeTaskFieldsUnchanged() {
-        taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW));
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+        taskManager.createTask(new Task(1,"Задача 1", "Описание задачи 1", NEW,
+                startTime, Duration.ofMinutes(10)));
 
         assertEquals("Задача 1", taskManager.getTaskById(1).getName(),
                 "Неправильно сохраняется имя задачи");
@@ -121,8 +138,12 @@ class TaskManagerTest {
 
     @Test
     void getAllTasks() {
-        Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
-        Task task2 = taskManager.createTask(new Task("Задача 2", "Описание задачи 2", NEW));
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+        Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime1, Duration.ofMinutes(10)));
+        Task task2 = taskManager.createTask(new Task("Задача 2", "Описание задачи 2", NEW,
+                startTime2, Duration.ofMinutes(20)));
 
         List<Task> taskList = taskManager.getAllTasks();
 
@@ -145,11 +166,15 @@ class TaskManagerTest {
 
     @Test
     void getAllSubtasks() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
         taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         Subtask subtask1 = taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime1, Duration.ofMinutes(10)));
         Subtask subtask2 = taskManager.createSubtask(
-                new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 1));
+                new Subtask("Подзадача 2", "Описание подзадачи 2", NEW,
+                        1, startTime2, Duration.ofMinutes(20)));
 
         List<Subtask> subtaskList = taskManager.getAllSubtasks();
 
@@ -181,8 +206,13 @@ class TaskManagerTest {
 
     @Test
     void updateTaskWithNullStatusTask() {
-        taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
-        Task task2 = new Task(1, "Задача 2", "Описание задачи 2", null);
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
+        taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime1, Duration.ofMinutes(10)));
+        Task task2 = new Task(1, "Задача 2", "Описание задачи 2", null,
+                startTime2, Duration.ofMinutes(10));
 
         taskManager.updateTask(task2);
 
@@ -192,7 +222,9 @@ class TaskManagerTest {
 
     @Test
     void updateTaskWithNull() {
-        Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+        Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime, Duration.ofMinutes(10)));
 
         taskManager.updateTask(null);
 
@@ -201,8 +233,10 @@ class TaskManagerTest {
 
     @Test
     void updateTaskWithWrongId() {
-        Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
-        Task task2 = new Task(2, "Задача 2", "Описание задачи 2", IN_PROGRESS);
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+        Task task1 = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW, startTime1, Duration.ofMinutes(10)));
+        Task task2 = new Task(2, "Задача 2", "Описание задачи 2", IN_PROGRESS, startTime2, Duration.ofMinutes(20));
 
         taskManager.updateTask(task2);
 
@@ -234,9 +268,12 @@ class TaskManagerTest {
 
     @Test
     void updateSubtaskWithNull() {
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+
         taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subTask = taskManager.createSubtask(
-                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime, Duration.ofMinutes(10)));
 
         taskManager.updateSubtask(null);
 
@@ -246,11 +283,15 @@ class TaskManagerTest {
 
     @Test
     void updateSubtaskWithWrongId() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
         taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subtask1 = taskManager.createSubtask(
-                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime1, Duration.ofMinutes(10)));
         Subtask subtask2 = new Subtask(3, "Подзадача 2",
-                "Описание подзадачи 2", IN_PROGRESS, 1);
+                "Описание подзадачи 2", IN_PROGRESS, 1, startTime2, Duration.ofMinutes(20));
 
         taskManager.updateSubtask(subtask2);
 
@@ -260,7 +301,9 @@ class TaskManagerTest {
 
     @Test
     void deleteTaskById() {
-        taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+
+        taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW, startTime, Duration.ofMinutes(10)));
 
         taskManager.deleteTaskById(1);
 
@@ -278,9 +321,12 @@ class TaskManagerTest {
 
     @Test
     void deleteSubtaskById() {
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+
         taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         taskManager.createSubtask(new Subtask(
-                2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                2,"Подзадача 1", "Описание подзадачи 1", NEW,
+                1, startTime, Duration.ofMinutes(10)));
 
         taskManager.deleteSubtaskById(2);
 
@@ -291,7 +337,10 @@ class TaskManagerTest {
 
     @Test
     void deleteTaskByWrongId() {
-        Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+
+        Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime, Duration.ofMinutes(10)));
 
         taskManager.deleteTaskById(2);
 
@@ -311,9 +360,12 @@ class TaskManagerTest {
 
     @Test
     void deleteSubtaskByWrongId() {
+        LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
+
         taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask(2,"Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime, Duration.ofMinutes(10)));
 
         taskManager.deleteSubtaskById(3);
 
@@ -323,8 +375,13 @@ class TaskManagerTest {
 
     @Test
     void deleteAllTasks() {
-        taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
-        taskManager.createTask(new Task("Задача 2", "Описание задачи 2", NEW));
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
+        taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime1, Duration.ofMinutes(10)));
+        taskManager.createTask(new Task("Задача 2", "Описание задачи 2", NEW,
+                startTime2, Duration.ofMinutes(20)));
 
         taskManager.deleteAllTasks();
 
@@ -335,12 +392,17 @@ class TaskManagerTest {
 
     @Test
     void deleteAllEpics() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
         taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         taskManager.createEpic(new Epic("Эпик 2", "Описание эпика 2"));
         taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
+                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime1, Duration.ofMinutes(10)));
         taskManager.createSubtask(
-                new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 2));
+                new Subtask("Подзадача 2", "Описание подзадачи 2", NEW,
+                        2, startTime2, Duration.ofMinutes(20)));
 
         taskManager.deleteAllEpics();
 
@@ -356,8 +418,13 @@ class TaskManagerTest {
 
     @Test
     void deleteAllSubtasks() {
-        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
-        taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 2));
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
+        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                1, startTime1, Duration.ofMinutes(10)));
+        taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW,
+                2, startTime2, Duration.ofMinutes(20)));
 
         taskManager.deleteAllSubtasks();
 
@@ -369,9 +436,14 @@ class TaskManagerTest {
 
     @Test
     void getSubtaskList() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
         Epic epic1 = taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
-        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
-        taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 1", NEW, 1));
+        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                1, startTime1, Duration.ofMinutes(10)));
+        taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 1", NEW,
+                1, startTime2, Duration.ofMinutes(20)));
 
         List<Subtask> list = taskManager.getSubtaskList(epic1);
         assertEquals(2, list.size(), "Список подзадач должен содержать 2 элемента");
@@ -379,21 +451,29 @@ class TaskManagerTest {
 
     @Test
     void getSubtasksFromEpicWithWrongId() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
         taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
-        taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 1));
-        taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW, 1));
+        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime1, Duration.ofMinutes(10)));
+        taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW,
+                1, startTime2, Duration.ofMinutes(20)));
 
         assertTrue(taskManager.getSubtaskList(epic2).isEmpty(), "Должен возвращаться пустой список");
     }
 
     @Test
     void getHistory() {
-        Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW));
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
+        Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime1, Duration.ofMinutes(10)));
         Epic epic = taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW, 2));
+                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                        2, startTime2, Duration.ofMinutes(10)));
 
         taskManager.getTaskById(1);
         taskManager.getEpicById(2);
@@ -418,5 +498,91 @@ class TaskManagerTest {
 
         assertEquals(epic, list1.getFirst(), "Эпик 1 должен быть первым в списке");
         assertEquals(subtask, list1.getLast(), "Подзадача 1 должна быть последней в списке");
+    }
+
+    // Для подзадач нужно дополнительно проверить наличие эпика
+    @Test
+    void getEpicBySubtask() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+
+        taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
+        Subtask subtask = taskManager.createSubtask(
+                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                        1, startTime1, Duration.ofMinutes(10)));
+        assertEquals(1, subtask.getEpicId(), "В подзадачу не передан номер эпика");
+
+    }
+
+    // Для эпика нужно дополнительно проверить расчёт статуса
+    @Test
+    void calculateEpicStatus() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
+        Epic epic = taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
+        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                1, startTime1, Duration.ofMinutes(10)));
+        taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW,
+                1, startTime2, Duration.ofMinutes(20)));
+
+        taskManager.calculateStatus(epic);
+        assertEquals(NEW, epic.getStatus());
+
+        taskManager.updateSubtask(new Subtask(3, "Подзадача 2", "Описание подзадачи 2", IN_PROGRESS,
+                1, startTime2, Duration.ofMinutes(20)));
+        taskManager.calculateStatus(epic);
+        assertEquals(IN_PROGRESS, epic.getStatus());
+    }
+
+    // Тест правильности записи времени начала и длительности подзадачи
+    @Test
+    void updateSubtaskTimeAndDuration() {
+        LocalDateTime startTime1 = LocalDateTime.of(2023, 5, 8, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2023, 5, 8, 1, 10);
+
+        taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
+        taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                1, startTime1, Duration.ofMinutes(10)));
+
+        assertEquals(startTime1, taskManager.getSubtaskById(2).getStartTime(),
+                "Время начала подзадачи записано неправильно");
+        assertEquals(Duration.ofMinutes(10), taskManager.getSubtaskById(2).getDuration(),
+                "Длительность подзадачи записана неправильно");
+
+        taskManager.updateSubtask(new Subtask(2, "Подзадача 1", "Описание подзадачи 1", IN_PROGRESS,
+                1, startTime2, Duration.ofMinutes(20)));
+
+        assertEquals(startTime2, taskManager.getSubtaskById(2).getStartTime(),
+                "Время начала подзадачи записано неправильно");
+        assertEquals(Duration.ofMinutes(20), taskManager.getSubtaskById(2).getDuration(),
+                "Длительность подзадачи записана неправильно");
+    }
+
+    // Тест на правильность расчёта пересечения интервалов и их запись в список
+    @Test
+    void getPrioritizedTasks() {
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+
+        taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
+        Subtask subtask = taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
+                1, startTime2, Duration.ofMinutes(10)));
+        Task task = taskManager.createTask(new Task("Задача 1", "Описание задачи 1", NEW,
+                startTime1, Duration.ofMinutes(20)));
+
+        List<Task> list1 = taskManager.getPrioritizedTasks();
+
+        assertEquals(task, list1.get(0), "Задача 1 должна быть первой в списке");
+        assertEquals(subtask, list1.get(1), "Подзадача 1 должна быть второй в списке");
+
+        LocalDateTime startTime3 = LocalDateTime.of(2024, 11, 5, 0, 20);
+        Subtask subtask2 = taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW,
+                1, startTime3, Duration.ofMinutes(10)));
+
+        List<Task> list2 = taskManager.getPrioritizedTasks();
+
+        assertEquals(subtask2, list2.get(0), "Подзадача 2 должна быть первой в списке");
+        assertEquals(task, list2.get(1), "Задача 1 должна быть второй в списке");
+        assertEquals(subtask, list2.get(2), "Подзадача 1 должна быть третьей в списке");
     }
 }
