@@ -19,6 +19,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     private final File file;
 
+    static final String HEADER = "id,type,name,status,description,epic,startTime,duration,endTime\n";
+
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
         this.file = file;
@@ -122,7 +124,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     protected void save() {
         try (FileWriter writer = new FileWriter(file)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write(HEADER);
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
                 writer.write(entry.getValue().toString() + "\n");
             }
