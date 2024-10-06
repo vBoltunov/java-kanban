@@ -136,6 +136,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return getId() + ",TASK," + getName() + "," + getStatus() + "," + getDescription();
+        return getId() +
+                ",TASK," +
+                getName() + "," +
+                getStatus() + "," +
+                getDescription() + ", ," +
+                getStartTime() + "," +
+                getDuration() + "," +
+                getEndTime();
     }
 }
