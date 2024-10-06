@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
@@ -122,14 +123,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     protected void save() {
         try (FileWriter writer = new FileWriter(file)) {
             writer.write("id,type,name,status,description,epic\n");
-            for (Integer key : tasks.keySet()) {
-                writer.write(tasks.get(key).toString() + "\n");
+            for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
+                writer.write(entry.getValue().toString() + "\n");
             }
-            for (Integer key : epics.keySet()) {
-                writer.write(epics.get(key).toString() + "\n");
+            for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
+                writer.write(entry.getValue().toString() + "\n");
             }
-            for (Integer key : subtasks.keySet()) {
-                writer.write(subtasks.get(key).toString() + "\n");
+            for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
+                writer.write(entry.getValue().toString() + "\n");
             }
         } catch (IOException exp) {
             throw new ManagerSaveException("Произошла ошибка записи в файл", exp);
