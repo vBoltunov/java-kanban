@@ -5,6 +5,7 @@ import model.enums.Status;
 import model.Subtask;
 import model.Task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -311,5 +312,19 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks);
+    }
+
+    private boolean isValid(Task task) {
+        if (task.getStartTime() == null || task.getEndTime() == null) return false;
+        LocalDateTime startOfReceived = task.getStartTime();
+        LocalDateTime endOfReceived = task.getEndTime();
+
+        return prioritizedTasks.stream().noneMatch(savedTask -> {
+            if (savedTask.getStartTime() == null || savedTask.getEndTime() == null) return false;
+            LocalDateTime startOfSaved = savedTask.getStartTime();
+            LocalDateTime endOfSaved = savedTask.getEndTime();
+            return (startOfReceived.isBefore(endOfSaved) && endOfReceived.isAfter(startOfSaved)) ||
+                    (startOfReceived.isEqual(startOfSaved) || endOfReceived.isEqual(endOfSaved));
+        });
     }
 }
