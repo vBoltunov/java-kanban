@@ -7,8 +7,10 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -19,8 +21,12 @@ public class InMemoryTaskManager implements TaskManager {
     protected static HashMap<Integer, Epic> epics;
     protected static HashMap<Integer, Subtask> subtasks;
     protected static HistoryManager historyManager;
+    protected static Set<Task> prioritizedTasks;
 
     protected int id = 0;
+
+    private static final Comparator<Task> taskComparator = Comparator.comparing(
+            Task::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId);
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
