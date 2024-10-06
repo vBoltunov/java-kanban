@@ -5,6 +5,7 @@ import model.enums.Status;
 import model.Subtask;
 import model.Task;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -312,6 +313,26 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks);
+    }
+
+    private void updateEpicWithSubtask(Epic epic, Subtask subtask) {
+        LocalDateTime subtaskStartTime = subtask.getStartTime();
+        LocalDateTime subtaskEndTime = subtask.getEndTime();
+        Duration subtaskDuration = subtask.getDuration();
+
+        if (epic.getStartTime() == null || epic.getStartTime().isAfter(subtaskStartTime)) {
+            epic.setStartTime(subtaskStartTime);
+        }
+
+        if (epic.getEndTime() == null || subtaskEndTime.isAfter(epic.getEndTime())) {
+            epic.setEndTime(subtaskEndTime);
+        }
+
+        if (epic.getDuration() == null) {
+            epic.setDuration(subtaskDuration);
+        } else {
+            epic.setDuration(epic.getDuration().plus(subtaskDuration));
+        }
     }
 
     private boolean isValid(Task task) {
