@@ -1,5 +1,5 @@
-import infrastructure.Managers;
-import infrastructure.TaskManager;
+package infrastructure;
+
 import model.Epic;
 import model.Subtask;
 import model.Task;
