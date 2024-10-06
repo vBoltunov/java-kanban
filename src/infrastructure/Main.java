@@ -4,6 +4,9 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static model.enums.Status.*;
 
 public class Main {
@@ -11,17 +14,29 @@ public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
 
+        LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
+        LocalDateTime startTime2 = LocalDateTime.of(2024, 11, 5, 1, 20);
+        LocalDateTime startTime3 = LocalDateTime.of(2024, 11, 5, 1, 45);
+        LocalDateTime startTime4 = LocalDateTime.of(2024, 11, 5, 2, 0);
+        LocalDateTime startTime5 = LocalDateTime.of(2024, 11, 5, 2, 25);
+
+
         // Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач.
         System.out.println("Создаём две задачи, эпик с тремя подзадачами и эпик без подзадач...");
-        taskManager.createTask(new Task(1, "Помыть пол", "Задача 1", NEW));
-        taskManager.createTask(new Task(2, "Приготовить еду", "Задача 2", NEW));
+        taskManager.createTask(new Task(1, "Помыть пол", "Задача 1", NEW,
+                startTime1, Duration.ofMinutes(10)));
+        taskManager.createTask(new Task(2, "Приготовить еду", "Задача 2", NEW,
+                startTime2, Duration.ofMinutes(20)));
 
-        taskManager.createEpic(new Epic(3, "Выполнить ФЗ №6", "Эпик 1", NEW));
-        taskManager.createSubtask(new Subtask(4, "Написать код", "Подзадача 1", NEW, 3));
+        taskManager.createEpic(new Epic(3, "Выполнить ФЗ №8", "Эпик 1", NEW));
+        taskManager.createSubtask(new Subtask(4, "Написать код", "Подзадача 1", NEW,
+                3, startTime3, Duration.ofMinutes(10)));
         taskManager.createSubtask(new Subtask(
-                5, "Отправить код на проверку", "Подзадача 2", NEW, 3));
+                5, "Отправить код на проверку", "Подзадача 2", NEW,
+                3, startTime4, Duration.ofMinutes(20)));
         taskManager.createSubtask(new Subtask(
-                6, "Доработать код согласно ревью", "Подзадача 3", NEW, 3));
+                6, "Доработать код согласно ревью", "Подзадача 3", NEW,
+                3, startTime5, Duration.ofMinutes(20)));
 
         taskManager.createEpic(new Epic(7, "Эпичный эпик", "Эпик 2", NEW));
 
