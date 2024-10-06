@@ -186,10 +186,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             while (reader.ready()) {
                 String line = reader.readLine();
-                if (line.isEmpty()) {
-                    break;
-                }
-                if (line.contains("id")) {
+                if (line.isEmpty() || line.contains("id")) {
                     continue;
                 }
                 Task loadedTask = parseFromString(line);
