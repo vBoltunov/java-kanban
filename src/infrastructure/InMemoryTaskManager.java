@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -33,6 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
         epics = new HashMap<>();
         subtasks = new HashMap<>();
         InMemoryTaskManager.historyManager = historyManager;
+        prioritizedTasks = new TreeSet<>(taskComparator);
     }
 
     public int generateId() {
