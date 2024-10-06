@@ -182,7 +182,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         if (task == null || !tasks.containsKey(task.getId())) {
-            logger.info("Некорректная задача");
+            logger.info("Передана пустая задача или некорректный id задачи");
             return;
         }
 
@@ -201,7 +201,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateEpic(Epic epic) {
         if (epic == null || !epics.containsKey(epic.getId())) {
-            logger.info("Некорректный эпик");
+            logger.info("Передан пустой эпик или некорректный id эпика");
             return;
         }
 
@@ -213,7 +213,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         if (subtask == null || !subtasks.containsKey(subtask.getId())) {
-            logger.info("Некорректная подзадача");
+            logger.info("Передана пустая подзадача или некорректный id подзадачи");
             return;
         }
 
