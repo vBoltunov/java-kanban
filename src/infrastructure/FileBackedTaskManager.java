@@ -1,5 +1,6 @@
 package infrastructure;
 
+import exceptions.FileLoadException;
 import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
@@ -181,7 +182,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return parsedTask;
     }
 
-    protected static FileBackedTaskManager loadFromFile(File file) {
+    protected static FileBackedTaskManager loadFromFile(File file) throws FileLoadException {
         FileBackedTaskManager manager = new FileBackedTaskManager(historyManager, file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             while (reader.ready()) {
@@ -206,9 +207,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 }
             }
         } catch (FileNotFoundException exp) {
-            throw new RuntimeException("Файл не найден", exp);
+            throw new FileLoadException("Файл не найден", exp);
         } catch (IOException exp) {
-            throw new ManagerSaveException("Произошла ошибка чтения из файла", exp);
+            throw new FileLoadException("Произошла ошибка чтения из файла", exp);
         }
         return manager;
     }
