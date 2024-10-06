@@ -57,6 +57,14 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return getId() + ",SUBTASK," + getName() + "," + getStatus() + "," + getDescription() + "," + getEpicId();
+        return getId() +
+                ",SUBTASK," +
+                getName() + "," +
+                getStatus() + "," +
+                getDescription() + "," +
+                getEpicId() + "," +
+                getStartTime() + "," +
+                getDuration() + "," +
+                getStartTime();
     }
 }
