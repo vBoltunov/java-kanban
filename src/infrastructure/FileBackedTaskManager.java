@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
@@ -147,21 +149,31 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String name = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
+        LocalDateTime startTime = LocalDateTime.parse(parts[6]);
+        Duration duration = Duration.ofMinutes(Integer.parseInt(parts[7]));
         switch (taskType) {
             case TASK:
                 parsedTask = new Task(id, name, description);
                 parsedTask.setStatus(status);
+                parsedTask.setStartTime(startTime);
+                parsedTask.setDuration(duration);
+                prioritizedTasks.add(parsedTask);
                 break;
 
             case EPIC:
                 parsedTask = new Epic(id, name, description);
                 parsedTask.setStatus(status);
+                parsedTask.setStartTime(startTime);
+                parsedTask.setDuration(duration);
                 break;
 
             case SUBTASK:
                 int epicId = Integer.parseInt(parts[5]);
                 parsedTask = new Subtask(id, name, description, epicId);
                 parsedTask.setStatus(status);
+                parsedTask.setStartTime(startTime);
+                parsedTask.setDuration(duration);
+                prioritizedTasks.add(parsedTask);
                 break;
             default:
                 throw new ManagerSaveException("Неизвестный тип задачи: " + taskType);
