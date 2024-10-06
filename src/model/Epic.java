@@ -3,11 +3,14 @@ package model;
 import model.enums.Status;
 import model.enums.TaskType;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
     private final List<Integer> subtasks = new ArrayList<>();
+
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
