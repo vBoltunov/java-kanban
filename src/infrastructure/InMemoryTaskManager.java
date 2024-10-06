@@ -315,6 +315,20 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
+    private void createEpicDateTime(Epic epic) {
+        List<Integer> subtaskList = epic.getSubtasks();
+        if (subtaskList.isEmpty()) {
+            epic.setDuration(null);
+            epic.setStartTime(null);
+            epic.setEndTime(null);
+            return;
+        }
+
+        for (Integer subtaskId : subtaskList) {
+            updateEpicWithSubtask(epic, subtasks.get(subtaskId));
+        }
+    }
+
     private void updateEpicWithSubtask(Epic epic, Subtask subtask) {
         LocalDateTime subtaskStartTime = subtask.getStartTime();
         LocalDateTime subtaskEndTime = subtask.getEndTime();
