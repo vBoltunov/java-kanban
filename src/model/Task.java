@@ -3,6 +3,8 @@ package model;
 import model.enums.Status;
 import model.enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,6 +12,8 @@ public class Task {
     private String name;
     private String description;
     private Status status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
@@ -34,6 +38,23 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public int getId() {
@@ -72,6 +93,32 @@ public class Task {
         return TaskType.TASK;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null) {
+            return null;
+        }
+        if (duration == null) {
+            return startTime;
+        }
+        return startTime.plus(duration);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -89,6 +136,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return getId() + ",TASK," + getName() + "," + getStatus() + "," + getDescription();
+        return getId() +
+                ",TASK," +
+                getName() + "," +
+                getStatus() + "," +
+                getDescription() + ", ," +
+                getStartTime() + "," +
+                getDuration() + "," +
+                getEndTime();
     }
 }

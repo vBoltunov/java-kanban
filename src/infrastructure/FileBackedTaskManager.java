@@ -1,5 +1,6 @@
 package infrastructure;
 
+import exceptions.FileLoadException;
 import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
@@ -13,11 +14,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
     private final File file;
+
+    static final String HEADER = "id,type,name,status,description,epic,startTime,duration,endTime\n";
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
@@ -122,7 +127,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     protected void save() {
         try (FileWriter writer = new FileWriter(file)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write(HEADER);
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
                 writer.write(entry.getValue().toString() + "\n");
             }
@@ -145,21 +150,31 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String name = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
+        LocalDateTime startTime = LocalDateTime.parse(parts[6]);
+        Duration duration = Duration.ofMinutes(Integer.parseInt(parts[7]));
         switch (taskType) {
             case TASK:
                 parsedTask = new Task(id, name, description);
                 parsedTask.setStatus(status);
+                parsedTask.setStartTime(startTime);
+                parsedTask.setDuration(duration);
+                prioritizedTasks.add(parsedTask);
                 break;
 
             case EPIC:
                 parsedTask = new Epic(id, name, description);
                 parsedTask.setStatus(status);
+                parsedTask.setStartTime(startTime);
+                parsedTask.setDuration(duration);
                 break;
 
             case SUBTASK:
                 int epicId = Integer.parseInt(parts[5]);
                 parsedTask = new Subtask(id, name, description, epicId);
                 parsedTask.setStatus(status);
+                parsedTask.setStartTime(startTime);
+                parsedTask.setDuration(duration);
+                prioritizedTasks.add(parsedTask);
                 break;
             default:
                 throw new ManagerSaveException("Неизвестный тип задачи: " + taskType);
@@ -167,15 +182,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return parsedTask;
     }
 
-    protected static FileBackedTaskManager loadFromFile(File file) {
+    protected static FileBackedTaskManager loadFromFile(File file) throws FileLoadException {
         FileBackedTaskManager manager = new FileBackedTaskManager(historyManager, file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             while (reader.ready()) {
                 String line = reader.readLine();
-                if (line.isEmpty()) {
-                    break;
-                }
-                if (line.contains("id")) {
+                if (line.isEmpty() || line.contains("id")) {
                     continue;
                 }
                 Task loadedTask = parseFromString(line);
@@ -195,9 +207,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 }
             }
         } catch (FileNotFoundException exp) {
-            throw new RuntimeException("Файл не найден", exp);
+            throw new FileLoadException("Файл не найден", exp);
         } catch (IOException exp) {
-            throw new ManagerSaveException("Произошла ошибка чтения из файла", exp);
+            throw new FileLoadException("Произошла ошибка чтения из файла", exp);
         }
         return manager;
     }
