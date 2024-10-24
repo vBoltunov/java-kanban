@@ -1,7 +1,7 @@
 package model;
 
-import infrastructure.Managers;
-import infrastructure.TaskManager;
+import managers.Managers;
+import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

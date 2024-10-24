@@ -1,8 +1,8 @@
 package model;
 
-import infrastructure.HistoryManager;
-import infrastructure.Managers;
-import infrastructure.TaskManager;
+import managers.HistoryManager;
+import managers.Managers;
+import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

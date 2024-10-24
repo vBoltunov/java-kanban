@@ -1,4 +1,4 @@
-package infrastructure;
+package managers;
 
 import model.Task;
 
