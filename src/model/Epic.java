@@ -3,29 +3,33 @@ package model;
 import model.enums.Status;
 import model.enums.TaskType;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private final List<Integer> subtasks = new ArrayList<>();
+    private final List<Integer> subtasks;
 
-    private LocalDateTime endTime;
+    public Epic() {
+        this.subtasks = new ArrayList<>();
+    }
 
     public Epic(String name, String description) {
         super(name, description);
+        this.subtasks = new ArrayList<>();
     }
 
     public Epic(int id, String name, String description) {
         super(id, name, description);
+        this.subtasks = new ArrayList<>();
     }
 
     public Epic(int id, String name, String description, Status status) {
         super(id, name, description, status);
+        this.subtasks = new ArrayList<>();
     }
 
-    public List<Integer> getSubtasks() {
+    public List<Integer> getEpicSubtasks() {
         return subtasks;
     }
 
@@ -47,26 +51,17 @@ public class Epic extends Task {
     }
 
     @Override
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Epic epic = (Epic) o;
-        return Objects.equals(subtasks, epic.subtasks) && Objects.equals(endTime, epic.endTime);
+        return Objects.equals(subtasks, epic.subtasks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), subtasks, endTime);
+        return Objects.hash(super.hashCode(), subtasks);
     }
 
     @Override
