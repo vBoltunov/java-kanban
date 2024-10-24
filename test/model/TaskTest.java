@@ -22,7 +22,7 @@ class TaskTest {
 
     @BeforeEach
     void beforeEach() {
-        taskManager = Managers.getDefault();
+        taskManager = Managers.getDefaultManager();
         historyManager = Managers.getDefaultHistory();
         task = new Task("Задача 1", "Описание задачи 1", NEW,
                 LocalDateTime.of(2024, 11, 5, 1, 0), Duration.ofMinutes(10));
@@ -41,7 +41,7 @@ class TaskTest {
 
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
-        assertEquals(task, tasks.get(0), "Задачи не совпадают.");
+        assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
     }
 
     @Test
