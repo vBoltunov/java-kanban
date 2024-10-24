@@ -44,7 +44,6 @@ class HistoryManagerTest {
         assertEquals(subtask, list.get(2), "Подзадача 1 должна быть третьей в списке");
     }
 
-    // Дублирование
     @Test
     void addTasksTwice() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -69,7 +68,6 @@ class HistoryManagerTest {
         assertEquals(task, list.get(2), "Задача 1 должна быть третьей в списке");
     }
 
-    // Удаление из начала истории
     @Test
     void removeFirstElement() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -93,7 +91,6 @@ class HistoryManagerTest {
         assertEquals(subtask, list.get(1), "Подзадача должна быть элементом с индексом 1");
     }
 
-    // Удаление из конца истории
     @Test
     void removeLastElement() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -116,8 +113,7 @@ class HistoryManagerTest {
         assertEquals(task1, list.get(0), "Задача 1 должна быть первой в списке");
         assertEquals(epic2, list.get(1), "Эпик 1 должен быть вторым в списке");
     }
-
-    // Удаление из середины истории
+    
     @Test
     void removeMiddleElement() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -161,7 +157,6 @@ class HistoryManagerTest {
         assertEquals(3, list.size(), "Длина списка должна быть равна 3");
     }
 
-    // Пустая история задач
     @Test
     void historyIsEmpty() {
         assertEquals(0, historyManager.getHistory().size(), "Длина списка должна быть равна 0");
