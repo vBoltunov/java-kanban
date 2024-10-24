@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-    int generateId();
-
     List<Task> getAllTasks();
 
     List<Epic> getAllEpics();
@@ -54,4 +52,8 @@ public interface TaskManager {
     List<Task> getHistory();
 
     List<Task> getPrioritizedTasks();
+
+    List<Subtask> getEpicSubtasks(int id);
+
+    HistoryManager getHistoryManager();
 }
