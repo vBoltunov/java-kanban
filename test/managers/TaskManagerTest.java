@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskManagerTest {
 
-    protected TaskManager taskManager;
+    private TaskManager taskManager;
 
     @BeforeEach
-    void beforeEach() {
-        taskManager = Managers.getDefault();
+    void setUp() {
+        taskManager = new InMemoryTaskManager();
     }
 
     @Test
@@ -44,9 +44,9 @@ class TaskManagerTest {
     void epicsEqualWhenIdsEqual() {
         LocalDateTime startTime = LocalDateTime.of(2024, 11, 5, 1, 0);
 
-        Epic epic = taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1"));
+        Epic epic = taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         Subtask subtask = taskManager.createSubtask(
-                new Subtask(1,"Подзадача 1", "Описание подзадачи 1", NEW,
+                new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
                         1, startTime, Duration.ofMinutes(10)));
 
         Epic savedEpic = taskManager.getAllEpics().getFirst();
@@ -64,7 +64,7 @@ class TaskManagerTest {
         assertEquals(subtask.hashCode(), savedSubtask.hashCode(),
                 "hashCode() исходной и записанной подзадач не совпадает");
         assertEquals(subtask.toString(), savedSubtask.toString(),
-                "toString() исходной и записанной подзадач не совпадает");
+                "toString() исходной и записанной подзадач не совпадают");
     }
 
     @Test
@@ -331,7 +331,7 @@ class TaskManagerTest {
         taskManager.deleteSubtaskById(2);
 
         assertNull(taskManager.getSubtaskById(2), "Подзадача не была удалена");
-        assertEquals(0, taskManager.getEpicById(1).getSubtasks().size(),
+        assertEquals(0, taskManager.getEpicById(1).getEpicSubtasks().size(),
                 "Список подзадач эпика должен быть пуст");
     }
 
@@ -456,7 +456,7 @@ class TaskManagerTest {
         taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
         Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
         taskManager.createSubtask(new Subtask("Подзадача 1", "Описание подзадачи 1", NEW,
-                        1, startTime1, Duration.ofMinutes(10)));
+                1, startTime1, Duration.ofMinutes(10)));
         taskManager.createSubtask(new Subtask("Подзадача 2", "Описание подзадачи 2", NEW,
                 1, startTime2, Duration.ofMinutes(20)));
 
@@ -500,7 +500,6 @@ class TaskManagerTest {
         assertEquals(subtask, list1.getLast(), "Подзадача 1 должна быть последней в списке");
     }
 
-    // Для подзадач нужно дополнительно проверить наличие эпика
     @Test
     void getEpicBySubtask() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -513,7 +512,6 @@ class TaskManagerTest {
 
     }
 
-    // Для эпика нужно дополнительно проверить расчёт статуса
     @Test
     void calculateEpicStatus() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -534,7 +532,6 @@ class TaskManagerTest {
         assertEquals(IN_PROGRESS, epic.getStatus());
     }
 
-    // Тест правильности записи времени начала и длительности подзадачи
     @Test
     void updateSubtaskTimeAndDuration() {
         LocalDateTime startTime1 = LocalDateTime.of(2023, 5, 8, 1, 0);
@@ -558,7 +555,6 @@ class TaskManagerTest {
                 "Длительность подзадачи записана неправильно");
     }
 
-    // Тест на правильность расчёта пересечения интервалов и их запись в список
     @Test
     void getPrioritizedTasks() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
