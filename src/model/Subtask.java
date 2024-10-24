@@ -8,7 +8,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private final int epicId;
+    private int epicId;
+
+    public Subtask(int id, String name, String description) {
+        super(id, name, description);
+    }
 
     public Subtask(String name, String description, Status status, int epicId) {
         super(name, description, status);
@@ -34,6 +38,14 @@ public class Subtask extends Task {
 
     public int getEpicId() {
         return epicId;
+    }
+
+    public void setEpicId(Epic epic) {
+        if (Objects.nonNull(epic)) {
+            this.epicId = epic.getId();
+        } else {
+            System.out.println("Эпик не может быть равен null");
+        }
     }
 
     @Override
@@ -65,6 +77,6 @@ public class Subtask extends Task {
                 getEpicId() + "," +
                 getStartTime() + "," +
                 getDuration() + "," +
-                getStartTime();
+                getEndTime();
     }
 }
