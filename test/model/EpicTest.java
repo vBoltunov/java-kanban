@@ -1,23 +1,24 @@
 package model;
 
-import managers.Managers;
+import managers.InMemoryTaskManager;
 import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
 import static model.enums.Status.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
 
-    TaskManager taskManager;
+    private TaskManager taskManager;
     Epic epic;
 
     @BeforeEach
-    void beforeEach() {
-        taskManager = Managers.getDefault();
+    void setUp() {
+        taskManager = new InMemoryTaskManager();
         epic = taskManager.createEpic(new Epic(1,"Эпик 1", "Описание эпика 1", NEW));
     }
 
@@ -30,9 +31,9 @@ class EpicTest {
         taskManager.createSubtask(new Subtask(3,"Подзадача 2", "Описание подзадачи 2", NEW,
                 1, startTime2, Duration.ofMinutes(20)));
         taskManager.deleteSubtaskById(2);
-        assertEquals(1, epic.getSubtasks().size());
-        assertEquals(3, epic.getSubtasks().getFirst());
-        assertEquals(3, epic.getSubtasks().getLast());
+        assertEquals(1, epic.getEpicSubtasks().size());
+        assertEquals(3, epic.getEpicSubtasks().getFirst());
+        assertEquals(3, epic.getEpicSubtasks().getLast());
     }
 
     @Test
@@ -40,7 +41,6 @@ class EpicTest {
         assertEquals(NEW, epic.getStatus(), "Статус генерируется неправильно");
     }
 
-    // Расчёт статуса эпика: все подзадачи в статусе NEW
     @Test
     void newEpicHasNewStatus() {
         LocalDateTime startTime = LocalDateTime.of(2024, 10, 5, 20, 0);
@@ -51,7 +51,6 @@ class EpicTest {
         assertEquals(NEW, epic.getStatus(), "Статус рассчитывается неправильно");
     }
 
-    // Расчёт статуса эпика: все подзадачи в статусе DONE
     @Test
     void doneEpicHasDoneStatus() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -67,7 +66,6 @@ class EpicTest {
         assertEquals(DONE, epic.getStatus(), "Статус рассчитывается неправильно");
     }
 
-    // Расчёт статуса эпика: подзадачи в статусе NEW и DONE
     @Test
     void epicInProgressWhenSubtasksPartiallyDone() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
@@ -83,7 +81,6 @@ class EpicTest {
         assertEquals(IN_PROGRESS, epic.getStatus(), "Статус рассчитывается неправильно");
     }
 
-    // Расчёт статуса эпика: все подзадачи в статусе IN_PROGRESS
     @Test
     void epicInProgressWhenSubtasksInProgress() {
         LocalDateTime startTime1 = LocalDateTime.of(2024, 11, 5, 1, 0);
