@@ -24,8 +24,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     static final String HEADER = "id,type,name,status,description,epic,startTime,duration,endTime\n";
 
-    public FileBackedTaskManager(HistoryManager historyManager, File file) {
-        super(historyManager);
+    public FileBackedTaskManager(File file) {
         this.file = file;
     }
 
@@ -142,7 +141,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    protected static Task parseFromString(String value) {
+    protected Task parseFromString(String value) {
         Task parsedTask;
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
@@ -150,8 +149,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String name = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
-        LocalDateTime startTime = LocalDateTime.parse(parts[6]);
-        Duration duration = Duration.ofMinutes(Integer.parseInt(parts[7]));
+        LocalDateTime startTime = parts[6].equals("null") ? null : LocalDateTime.parse(parts[6]);
+        Duration duration = parts[7].equals("null") ? null : Duration.parse(parts[7]);
+        LocalDateTime endTime = parts[8].equals("null") ? null : LocalDateTime.parse(parts[8]);
+
         switch (taskType) {
             case TASK:
                 parsedTask = new Task(id, name, description);
@@ -166,6 +167,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 parsedTask.setStatus(status);
                 parsedTask.setStartTime(startTime);
                 parsedTask.setDuration(duration);
+                parsedTask.setEndTime(endTime);
                 break;
 
             case SUBTASK:
@@ -176,33 +178,37 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 parsedTask.setDuration(duration);
                 prioritizedTasks.add(parsedTask);
                 break;
+
             default:
                 throw new ManagerSaveException("Неизвестный тип задачи: " + taskType);
         }
         return parsedTask;
     }
 
-    protected static FileBackedTaskManager loadFromFile(File file) throws FileLoadException {
-        FileBackedTaskManager manager = new FileBackedTaskManager(historyManager, file);
+    protected FileBackedTaskManager loadFromFile(File file) throws FileLoadException {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             while (reader.ready()) {
                 String line = reader.readLine();
                 if (line.isEmpty() || line.contains("id")) {
                     continue;
                 }
-                Task loadedTask = parseFromString(line);
+                Task loadedTask = manager.parseFromString(line);
                 int id = loadedTask.getId();
                 switch (loadedTask.getType()) {
                     case TASK:
-                        tasks.put(id, loadedTask);
+                        manager.tasks.put(id, loadedTask);
                         break;
                     case EPIC:
-                        epics.put(id, (Epic) loadedTask);
+                        manager.epics.put(id, (Epic) loadedTask);
                         break;
                     case SUBTASK:
-                        subtasks.put(id, (Subtask) loadedTask);
-                        Epic epic = epics.get(subtasks.get(id).getEpicId());
-                        epics.put(id, epic);
+                        Subtask subtask = (Subtask) loadedTask;
+                        manager.subtasks.put(id, subtask);
+                        Epic epic = manager.epics.get(subtask.getEpicId());
+                        if (epic != null) {
+                            epic.addSubtask(subtask.getId());
+                        }
                         break;
                 }
             }
