@@ -18,6 +18,8 @@ public class EpicHandler extends TaskHandler {
         super(manager);
     }
 
+    /* Метод handle() - это переопределение абстрактного метода public abstract void handle()
+    интерфейса HttpHandler */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {

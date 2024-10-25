@@ -19,6 +19,8 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
         this.manager = manager;
     }
 
+    /* Метод handle() - это переопределение абстрактного метода public abstract void handle()
+    интерфейса HttpHandler */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if ("GET".equals(exchange.getRequestMethod())) {
