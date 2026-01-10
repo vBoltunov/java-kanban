@@ -14,7 +14,6 @@ public class Task {
     private Status status;
     private Duration duration;
     private LocalDateTime startTime;
-    private LocalDateTime endTime;
 
     public Task() {
 
@@ -122,10 +121,6 @@ public class Task {
             return startTime;
         }
         return startTime.plus(duration);
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
     }
 
     @Override

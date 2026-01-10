@@ -349,7 +349,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtaskList.isEmpty()) {
             epic.setDuration(null);
             epic.setStartTime(null);
-            epic.setEndTime(null);
+            epic.setCalculatedEndTime(null);
             return;
         }
 
@@ -368,7 +368,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         if (epic.getEndTime() == null || subtaskEndTime.isAfter(epic.getEndTime())) {
-            epic.setEndTime(subtaskEndTime);
+            epic.setCalculatedEndTime(subtaskEndTime);
         }
 
         if (epic.getDuration() == null) {

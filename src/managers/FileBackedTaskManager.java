@@ -163,11 +163,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 break;
 
             case EPIC:
-                parsedTask = new Epic(id, name, description);
-                parsedTask.setStatus(status);
-                parsedTask.setStartTime(startTime);
-                parsedTask.setDuration(duration);
-                parsedTask.setEndTime(endTime);
+                Epic epic = new Epic(id, name, description);
+                epic.setStatus(status);
+                epic.setStartTime(startTime);
+                epic.setDuration(duration);
+                epic.setCalculatedEndTime(endTime);
+                parsedTask = epic;
                 break;
 
             case SUBTASK:
