@@ -25,13 +25,16 @@
 - **Gson** (JSON сериализация)
 
 ## 📁 Структура проекта
+
+```
 src/
-├── adapters/ # JSON адаптеры для сериализации (Duration, LocalDateTime)
-├── exceptions/ # Кастомные обработчики ошибок
-├── handlers/ # Кастомные HTTP обработчики
-├── managers/ # Логика управления задачами (in-memory, file-backed)
-├── model/ # Сущности (Task, Epic, Subtask)
-└── server/ # Конфигурация сервера
+├── adapters/            # JSON адаптеры для сериализации (Duration, LocalDateTime)
+├── exceptions/          # Кастомные обработчики ошибок
+├── handlers/            # Кастомные HTTP обработчики
+├── managers/            # Логика управления задачами (in-memory, file-backed)
+├── model/              # Сущности (Task, Epic, Subtask)
+└── server/             # Конфигурация сервера
+```
 
 ## 🧪 Тестирование
 
